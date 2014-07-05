@@ -1,0 +1,32 @@
+<div class="col-sm-12" ng-controller="SelectFieldOptionsCtrl">
+
+  <div class="row">
+    <p class="col-sm-12">
+      <label class="small">Select Field Options</label>
+    </p>
+  </div>
+
+  <div class="row"ng-repeat="option in field_definition.value_options.select">
+    <div class="col-sm-1">
+      {{option.id}}.
+    </div>
+    <div class="col-sm-3">
+      <input ng-model="option.name" class="form-control input-sm pull-right"
+             placeholder="Name"></input>
+    </div>
+    <div class="col-sm-7">
+      <input ng-model="option.description" class="form-control input-sm" 
+             placeholder="Description"></input>
+    </div>
+    <div class="col-sm-1">
+      <a href ng-click="delete_option(option.id)">
+        <i class="fa fa-trash-o"></i>
+      </a>
+    </div>
+  </div>
+
+  <row>
+    <a href ng-click="add_option()" > add select option </a>
+  </row>
+
+</div>

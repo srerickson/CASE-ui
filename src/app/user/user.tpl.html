@@ -1,0 +1,15 @@
+<div ng-controller="ActiveUserCtrl">
+
+  <div ng-show="user.id">
+    <span class="small">connected to {{case_server()}} as {{user.email}}</span>
+    <select ng-model="user.configs.active_schema_id" 
+            ng-options="s.id as s.name for s in schemas"/>
+    <a href ng-click="logout()" ng-show="user.id">logout</a>
+  </div>
+
+  <div ng-show="!user.id">
+    <a href ng-click="show_login()">login</a>
+  </div>
+
+</div>
+

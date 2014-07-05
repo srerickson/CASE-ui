@@ -1,0 +1,18 @@
+<form role="form">
+  <div class="form-group">
+    <label>name</label>
+    <input class="form-control" ng-model="schema.name" />
+  </div>
+
+  <div class="form-group">
+    <label>param</label>
+    <input class="form-control" ng-model="schema.param" />
+  </div>
+
+  <div class="form-group">
+    <label>description</label>
+    <textarea class="form-control" ng-model="schema.description"/>
+  </div>
+  <button ng-click="submit()">Save</button>
+  <button ng-click="cancel()">Cancel</button>
+</form>

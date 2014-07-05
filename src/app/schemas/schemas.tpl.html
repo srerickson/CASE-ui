@@ -1,0 +1,70 @@
+<div class="schemas panel-group">
+
+  <div class="schema panel panel-default"
+      ng-controller="SchemaCtrl"
+      ng-repeat="schema in schemas" 
+      is-open="isExpanded">
+
+    <div class="panel-heading">
+
+      <h4 class="panel-title">
+        {{schema.name}}
+
+        <div style="float:right;">
+          <a href ng-click="toggle()">
+            <i class="fa fa-info-circle"></i>
+          </a>
+          <a href ui-sref="edit_schema({schema_id: schema.id })">
+            <i class="fa fa-edit"></i>
+          </a>
+        </div>
+
+      
+    </h4>
+
+
+    </div>
+    <div class="panel-collapse collapse in" collapse="isCollapsed">
+      <div class="panel-body">
+        <p>
+          Description: {{schema.description}} 
+          <small ng-show="!schema.description"><i>none</i></small>
+        </p>
+        <p>Case Count: {{schema._case_count}}</p>
+        <p>
+          Field Sets: 
+          <ul class="field_sets">
+            <li ng-repeat="field_set in schema.field_sets">
+              <span class="name">{{field_set.name}}</span>
+            </li>
+          </ul>
+        </p> 
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-default" ui-sref="new_schema">
+  <i class="fa fa-plus"> New Schema</i>
+</button>
+
+    <!--     
+    <ul class="field_sets" ng-show ="isExpanded" ui-sortable ng-model="schema.field_sets">
+      <li ng-repeat="field_set in schema.field_sets"
+          ng-controller="FieldSetCtrl">
+        <span class="name">{{field_set.name}}</span>
+        <a ng-click="toggle()" ng-show="!isExpanded">expand</a>
+        <a ng-click="toggle()" ng-show="isExpanded">hide</a>
+        <a ng-click="get_full()">get</a>
+        <ul class="field_definitions" ng-show="isExpanded">
+          <li ng-repeat="field_definition in field_set.field_definitions"
+              ng-controller="FieldDefinitionCtrl">
+            <input ng-model="field_definition.name"></input>
+            <a ng-click="save()">save</a>
+          </li>
+        </ul>
+      </li>
+    </ul> 
+    -->
+
+

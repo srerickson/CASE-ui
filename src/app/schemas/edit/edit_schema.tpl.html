@@ -1,0 +1,38 @@
+
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+
+    <!-- Single button -->
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        Editing Schema: {{schema.name }} <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href ui-sref="edit_schema({schema_id: schema.id})">Edit name/description</a></li>
+        <li class="divider"></li>
+        <li role="presentation"  class="dropdown-header">
+          <span ng-show="schema.field_sets.length == 0">no</span> field sets
+        </li>
+        <li ng-repeat="field_set in schema.field_sets">
+          <a ui-sref="edit_schema.edit_field_set({schema_id: schema.id, field_set_id: field_set.id})">{{field_set.name}}</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a ui-sref="edit_schema.new_field_set({schema_id: schema.id})">Create a field set</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="panel-body" ui-view="form">
+    <form role="form" class="form-horizontal">
+      <div basic-fields="schema"></div>
+      <div class="col-sm-12">
+        <div class="pull-right">
+          <button ng-click="save()"  class="btn btn-default">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
