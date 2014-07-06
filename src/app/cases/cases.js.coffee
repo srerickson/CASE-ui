@@ -7,7 +7,7 @@ angular.module("case-ui.cases", [
 
 .config ($stateProvider) ->
   $stateProvider.state "cases",
-    url: "/cases"
+    url: "/cases?case_filter"
     views:
       main:
         controller: "CaseListCtrl"
@@ -36,12 +36,33 @@ angular.module("case-ui.cases", [
       ]
 
 
-.controller "CaseListCtrl", ($scope, Restangular, $state)->
-  Restangular.all('cases').getList().then (resp)->
-    $scope.cases = resp
-  
+.controller "CaseListCtrl", ($scope, Restangular, $state, $stateParams)->
+
+  $scope.cases = []
+  $stateParams.case_filter ||= 'all'
+
+  $scope.get_active_schema_cases = ->
+    if $scope.globals.active_schema.id
+      Restangular.one('schemas',$scope.globals.active_schema.id)
+        .all('cases').getList().then (resp)->
+          $scope.cases = resp
+    
   $scope.go = (id)->
     $state.go('edit_case',{case_id: id})
+
+  if $stateParams.case_filter == 'schema'
+    $scope.get_active_schema_cases()
+
+  if $stateParams.case_filter == 'all'
+    Restangular.all('cases').getList().then (resp)->
+      $scope.cases = resp
+
+  $scope.$watch "globals.active_schema.id", (n,o)->
+    if $stateParams.case_filter == "schema"
+      if n and n!=o
+        $scope.get_active_schema_cases()
+
+
 
 
 

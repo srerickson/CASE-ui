@@ -14,7 +14,15 @@ angular.module("case-ui.user", [
 .controller "ActiveUserCtrl",
   ($scope, Restangular, $modal, authService, $window)->
 
-    $scope.user = {}
+    $scope.user = {
+      configs:
+        active_schema_id: null
+    }
+
+    $scope.$watch 'user.configs.active_schema_id', (n,o)->
+      if n and n != o
+        $scope.$emit('setActiveSchema', $scope.user.configs.active_schema_id )
+        # TODO update user config on server
 
     $scope.case_server = ()->
       $window.sessionStorage.case_server
@@ -50,8 +58,6 @@ angular.module("case-ui.user", [
     $scope.getUserConfig = ->
       Restangular.all("users").customGET('current_user').then (user) ->
         $scope.user = user
-        if user.configs
-          $scope.$emit('setActiveSchema', user.configs.active_schema_id )
 
     # HTTP Auth Interceptor - show login when we get a 401 error
     $scope.$on 'event:auth-loginRequired', ()->
