@@ -1,10 +1,11 @@
 angular.module("case-ui", [
   "templates-app"
   "templates-common"
+  "case-ui.current-user"
   "case-ui.home"
   "case-ui.schemas"
   "case-ui.cases"
-  "case-ui.user"
+  "case-ui.user-config"
   "ui.router"
   "restangular"
   "ui.bootstrap"
@@ -74,7 +75,7 @@ angular.module("case-ui", [
 
 
 
-.controller "AppCtrl", ($scope, $location, Restangular, $window, $modal) ->
+.controller "AppCtrl", ($scope, $location, Restangular, currentUser) ->
   
   $scope.init_globals = ()->
     $scope.globals = {
@@ -82,9 +83,12 @@ angular.module("case-ui", [
       active_schema: {}
     }
 
+  # force login
+  currentUser.get()
+
   # FIXME - this needs to handle urls that are already 'full'
   $scope.asset_url = (path)->
-    base = $window.sessionStorage.case_server || ""
+    base = currentUser.server() || ""
     base + path
 
   $scope.init_globals()

@@ -1,5 +1,6 @@
 angular.module("case-ui.cases", [
   "ui.router"
+  "case-ui.current-user"
   "restangular"
   "blueimp.fileupload"
 ])
@@ -66,7 +67,8 @@ angular.module("case-ui.cases", [
 
 
 
-.controller "EditCaseCtrl", ($scope, Restangular, kase)->
+.controller "EditCaseCtrl", ($scope, Restangular, kase, currentUser)->
+  
   $scope.kase = kase
   $scope.field_values = []
 
