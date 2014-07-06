@@ -81,6 +81,12 @@ angular.module("case-ui", [
       schemas: []
       active_schema: {}
     }
+
+  # FIXME - this needs to handle urls that are already 'full'
+  $scope.asset_url = (path)->
+    base = $window.sessionStorage.case_server || ""
+    base + path
+
   $scope.init_globals()
 
   $scope.$on 'setActiveSchema', (e, schema_id)->

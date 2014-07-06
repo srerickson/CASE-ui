@@ -3,7 +3,10 @@
 
   <div class="row">
     <div class="col-sm-12 field_name">
-      <h4 class="case_name">{{kase.name}}</h4>
+      <h4 class="case_name">
+        <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq100)}}">
+        {{kase.name}}
+      </h4>
       {{kase.description}}
     </div>
   </div>

@@ -1,6 +1,39 @@
 
-<div class="row" ng-repeat="case in cases">
-  <a href ui-sref="edit_case({case_id: case.id})">
-    {{case.name}}
-  </a>
+
+<div class="row" class = "case_list">
+  <div class="col-sm-8">
+    <table class="table table-hover table-striped table-bordered">
+      <tr ng-repeat="case in cases" ng-click="go(case.id)">
+        <td>
+          <img class="img-thumbnail" ng-show="case._image_urls.sq60" ng-src="{{$parent.asset_url(case._image_urls.sq60)}}">
+        </td>
+        <td>
+          <a href ui-sref="edit_case({case_id: case.id})">
+            {{case.name}}
+          </a>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-sm-4">
+
+    <div class="btn-group btn-group-justified">
+      <a class="btn btn-primary"> All Cases </a>
+      <a class="btn btn-default"> Schema Cases </a>
+    </div>
+
+    <div>
+      <button ui-sref="new_case" class="btn btn-success"><i class="fa fa-plus"> New Case</i></button>
+    </div>
+
+
+
+  </div>
+
+
 </div>
+
+
+
+
+

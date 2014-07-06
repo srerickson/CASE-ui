@@ -36,10 +36,13 @@ angular.module("case-ui.cases", [
       ]
 
 
-.controller "CaseListCtrl", ($scope, Restangular)->
+.controller "CaseListCtrl", ($scope, Restangular, $state)->
   Restangular.all('cases').getList().then (resp)->
     $scope.cases = resp
-  return
+  
+  $scope.go = (id)->
+    $state.go('edit_case',{case_id: id})
+
 
 
 .controller "EditCaseCtrl", ($scope, Restangular, kase)->
