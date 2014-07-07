@@ -1,10 +1,9 @@
 <div ng-controller="ActiveUserCtrl">
 
-  {{user | json }}
   <div ng-show="current_user.logged_in()">
     <span class="small">connected to {{current_user.case_server()}} as {{current_user.name()}}</span>
-    <select ng-model="user.configs.active_schema_id" 
-            ng-options="s.id as s.name for s in schemas"/>
+    <select ng-model="schema_id" 
+            ng-options="s.id as s.name for s in current_schema.available"/>
     <a href ng-click="current_user.logout()" >logout</a>
   </div>
 

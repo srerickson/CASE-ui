@@ -1,6 +1,7 @@
 angular.module("case-ui", [
   "templates-app"
   "templates-common"
+  "case-ui.globals"
   "case-ui.current-user"
   "case-ui.home"
   "case-ui.schemas"
@@ -75,16 +76,18 @@ angular.module("case-ui", [
 
 
 
-.controller "AppCtrl", ($scope, $location, Restangular, currentUser) ->
+.controller "AppCtrl", ($scope, $location, currentUser, currentSchema) ->
   
   $scope.init_globals = ()->
-    $scope.globals = {
-      schemas: []
-      active_schema: {}
-    }
 
-  # force login
-  currentUser.get()
+  currentUser.get().then(
+    (resp)->
+      return resp
+    ,(err)->
+      currentUser.login_prompt()
+  )
+    .then ()-> currentSchema.get_available()
+    .then ()-> currentSchema.set_active()
 
   # FIXME - this needs to handle urls that are already 'full'
   $scope.asset_url = (path)->
@@ -93,18 +96,9 @@ angular.module("case-ui", [
 
   $scope.init_globals()
 
-  $scope.$on 'setActiveSchema', (e, schema_id)->
-    if schema_id and $scope.globals.active_schema.id != schema_id
-      #refresh schema list
-      Restangular.all('schemas').getList().then (resp)->
-        $scope.schemas = resp
+  $scope.$on 'event:auth-loginRequired', (e, data)->
+    currentUser.login_prompt()
 
-      Restangular.one('schemas',schema_id).get().then (resp)->
-        $scope.globals.active_schema = resp
-        $scope.$broadcast("activeSchemaChanged")
-
-  $scope.$on 'logout', ()->
-    $scope.init_globals()
 
   $scope.$on "$stateChangeSuccess", (ev, tState, tParams, fState, fParams) ->
     if angular.isDefined(tState.data.pageTitle)

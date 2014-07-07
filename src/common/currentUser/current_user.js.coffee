@@ -55,9 +55,6 @@ angular.module("case-ui.current-user", [
             return $q.reject('no token')
       )
 
-    $rootScope.$on 'event:auth-loginRequired', ()->
-      currentUser.login_prompt()
-
     return currentUser
 
 )

@@ -12,16 +12,22 @@ angular.module("case-ui.user-config", [
   }
 
 
-.controller "ActiveUserCtrl", ($scope, currentUser)->
+.controller "ActiveUserCtrl", ($scope, currentUser, currentSchema)->
 
   $scope.current_user = currentUser
+  $scope.current_schema = currentSchema
 
-  $scope.user = currentUser.get()
+  $scope.schema_id = currentSchema.active.id
 
-  # $scope.$watch 'user.configs.active_schema_id', (n,o)->
-  #   if n and n != o
-  #     $scope.$emit('setActiveSchema', $scope.user.configs.active_schema_id )
-  #     # TODO update user config on server
+  $scope.$on "currentSchemaChanged", ()->
+    $scope.schema_id = currentSchema.active.id
+
+
+
+  $scope.$watch 'schema_id', (n,o)->
+    if n and o and n != o
+      currentSchema.set_active(n)
+      # TODO update user config on server
 
   # if !currentUser.logged_in()
   #   currentUser.login_prompt()
