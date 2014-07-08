@@ -78,8 +78,6 @@ angular.module("case-ui", [
 
 .controller "AppCtrl", ($scope, $location, currentUser, currentSchema) ->
   
-  $scope.init_globals = ()->
-
   currentUser.get().then(
     (resp)->
       return resp
@@ -93,8 +91,6 @@ angular.module("case-ui", [
   $scope.asset_url = (path)->
     base = currentUser.server() || ""
     base + path
-
-  $scope.init_globals()
 
   $scope.$on 'event:auth-loginRequired', (e, data)->
     currentUser.login_prompt()

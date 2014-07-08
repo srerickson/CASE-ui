@@ -1,5 +1,6 @@
 angular.module("case-ui.cases", [
   "ui.router"
+  "case-ui.globals"
   "case-ui.current-user"
   "restangular"
   "blueimp.fileupload"
@@ -37,65 +38,67 @@ angular.module("case-ui.cases", [
       ]
 
 
-.controller "CaseListCtrl", ($scope, Restangular, $state, $stateParams)->
+.controller "CaseListCtrl",
+  ($scope, Restangular, $state, $stateParams, currentSchema)->
 
-  $scope.cases = []
-  $stateParams.case_filter ||= 'all'
+    if !$stateParams.case_filter
+      $state.go('cases',{case_filter: 'all'})
 
-  $scope.get_active_schema_cases = ->
-    if $scope.globals.active_schema.id
-      Restangular.one('schemas',$scope.globals.active_schema.id)
-        .all('cases').getList().then (resp)->
-          $scope.cases = resp
-    
-  $scope.go = (id)->
-    $state.go('edit_case',{case_id: id})
+    $scope.cases = []
+    $scope.current_schema = currentSchema
 
-  if $stateParams.case_filter == 'schema'
-    $scope.get_active_schema_cases()
+    $scope.go = (id)->
+      $state.go('edit_case',{case_id: id})
 
-  if $stateParams.case_filter == 'all'
-    Restangular.all('cases').getList().then (resp)->
-      $scope.cases = resp
+    $scope.all_cases = ->
+      Restangular.all('cases').getList().then (resp)->
+        $scope.cases = resp
 
-  $scope.$watch "globals.active_schema.id", (n,o)->
-    if $stateParams.case_filter == "schema"
-      if n and n!=o
-        $scope.get_active_schema_cases()
+    $scope.schema_cases = ->
+      currentSchema.get_cases().then (resp)->
+        $scope.cases = resp
+
+    $scope.$watch "current_schema.id()", (n,o)->
+      if n and n != o and $stateParams.case_filter == 'schema'
+        $scope.schema_cases()
+
+    if $stateParams.case_filter == 'all'
+      $scope.all_cases()
+    else if $stateParams.case_filter == 'schema'
+      $scope.schema_cases()
 
 
 
 
-
-.controller "EditCaseCtrl", ($scope, Restangular, kase, currentUser)->
+.controller "EditCaseCtrl",
+  ($scope, Restangular, kase, currentUser, currentSchema)->
   
-  $scope.kase = kase
-  $scope.field_values = []
+    $scope.kase = kase
+    $scope.current_schema = currentSchema
+    $scope.field_values = []
 
-  $scope.fetch_field_values = ()->
-    schema_id = $scope.globals.active_schema.id
-    Restangular.one("cases", kase.id)
-      .getList('field_values',{schema_id: schema_id})
-      .then (resp)->
-        $scope.field_values = resp
+    $scope.fetch_field_values = ()->
+      schema_id = currentSchema.id()
+      Restangular.one("cases", kase.id)
+        .getList('field_values',{schema_id: schema_id})
+        .then (resp)->
+          $scope.field_values = resp
 
-  $scope.fetch_field_values()
+    $scope.$watch "current_schema.id()", (n,o)->
+      $scope.fetch_field_values() if n
 
-  $scope.$on "activeSchemaChange", ()->
-    $scope.fetch_field_values()
-
-  $scope.lookup_val = (field)->
-    val = _.find $scope.field_values, (v)->
-      v.field_definition_id == field.id
-    if val
-      if field.type == "SelectField"
-        option = _.find field.value_options.select, (opt)->
-          opt.id == val.value
-        option.name
+    $scope.lookup_val = (field)->
+      val = _.find $scope.field_values, (v)->
+        v.field_definition_id == field.id
+      if val
+        if field.type == "SelectField"
+          option = _.find field.value_options.select, (opt)->
+            opt.id == val.value
+          option.name
+        else
+          val.value
       else
-        val.value
-    else
-      ""
+        ""
 
 
 # New Case Controller
