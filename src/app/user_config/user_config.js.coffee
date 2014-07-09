@@ -6,26 +6,21 @@ angular.module("case-ui.user-config", [
 ])
 
 
-.directive "activeUserConfigs", ()->
-  {
-    templateUrl: "user_config/user.tpl.html"
-  }
 
+.controller "UserConfigCtrl",
+  ($scope, Restangular, currentUser, $state, schema_id)->
 
-.controller "ActiveUserCtrl", ($scope, currentUser, currentSchema)->
+    $scope.current_schema_id = schema_id
+    $scope.schemas = []
 
-  $scope.current_user = currentUser
-  $scope.current_schema = currentSchema
+    Restangular.all('schemas').getList().then (resp)->
+      $scope.schemas = resp
 
-  $scope.schema_id = currentSchema.active.id
+    $scope.current_user = currentUser
 
-  $scope.$watch 'current_schema.active.id', (n,o)->
-    $scope.schema_id = n
-
-  $scope.$watch 'schema_id', (n,o)->
-    if n and o and n != o and n != currentSchema.active.id
-      currentSchema.set_active(n)
-      # TODO update user config on server
+    $scope.$watch 'current_schema_id', (n,o)->
+      if $state.current.name and n and n != 0
+        $state.go($state.current.name,{schema_id: n})
 
 
 

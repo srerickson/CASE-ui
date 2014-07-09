@@ -10,95 +10,97 @@ angular.module("case-ui.cases", [
 
 .config ($stateProvider) ->
   $stateProvider.state "cases",
+    parent: "root"
     url: "/cases?case_filter"
-    views:
-      main:
-        controller: "CaseListCtrl"
-        templateUrl: "cases/case_list.tpl.html"
+    controller: "CaseListCtrl"
+    templateUrl: "cases/case_list.tpl.html"
     data:
       pageTitle: "Cases"
+    resolve:
+      schema: ["schema_id","Restangular", (schema_id, Restangular)->
+          Restangular.one("schemas",schema_id).get().then(
+            (resp)->
+              resp
+            ,(err)->
+              null
+          )
+      ]
+
+
+
   $stateProvider.state "new_case",
+    parent: "root"
     url: "/cases/new"
-    views:
-      main:
-        controller: "NewCaseListCtrl"
-        templateUrl: "cases/new_case.tpl.html"
+    controller: "NewCaseListCtrl"
+    templateUrl: "cases/new_case.tpl.html"
     data:
       pageTitle: "New Case"
   $stateProvider.state "edit_case",
+    parent: "root"
     url: "/cases/:case_id"
-    views:
-      main:
-        controller: "EditCaseCtrl"
-        templateUrl: "cases/edit_case.tpl.html"
+    controller: "EditCaseCtrl"
+    templateUrl: "cases/edit_case.tpl.html"
     data:
       pageTitle: "Editing Case"
     resolve:
       kase: ["Restangular", "$stateParams", (Restangular, $stateParams)->
         Restangular.one('cases', $stateParams.case_id ).get()
       ]
+      schema: ["schema_id","Restangular", (schema_id, Restangular)->
+          Restangular.one("schemas",schema_id).get().then(
+            (resp)->
+              resp
+            ,(err)->
+              null
+          )
+      ]
 
 
 .controller "CaseListCtrl",
-  ($scope, Restangular, $state, $stateParams, currentSchema)->
+  ($scope, Restangular, $state, $stateParams, schema)->
 
     if !$stateParams.case_filter
       $state.go('cases',{case_filter: 'all'})
 
+    $scope.schema = schema
     $scope.cases = []
-    $scope.current_schema = currentSchema
+
+    if $stateParams.case_filter == 'all'
+      Restangular.all('cases').getList().then (resp)->
+        $scope.cases = resp
+    else if $stateParams.case_filter == 'schema'
+      if schema
+        schema.all('cases').getList().then (resp)->
+          $scope.cases = resp
 
     $scope.go = (id)->
       $state.go('edit_case',{case_id: id})
 
-    $scope.all_cases = ->
-      Restangular.all('cases').getList().then (resp)->
-        $scope.cases = resp
-
-    $scope.schema_cases = ->
-      currentSchema.get_cases().then (resp)->
-        $scope.cases = resp
-
-    $scope.$watch "current_schema.id()", (n,o)->
-      if n and n != o and $stateParams.case_filter == 'schema'
-        $scope.schema_cases()
-
-    if $stateParams.case_filter == 'all'
-      $scope.all_cases()
-    else if $stateParams.case_filter == 'schema'
-      $scope.schema_cases()
 
 
+.controller "EditCaseCtrl", ($scope, Restangular, kase, schema)->
+    
+  $scope.kase = kase
+  $scope.current_schema = schema
+  $scope.field_values = []
 
+  if kase and schema
+    Restangular.one("cases", kase.id)
+      .getList('field_values',{schema_id: schema.id})
+      .then (resp)->
+        $scope.field_values = resp
 
-.controller "EditCaseCtrl",
-  ($scope, Restangular, kase, currentUser, currentSchema)->
-  
-    $scope.kase = kase
-    $scope.current_schema = currentSchema
-    $scope.field_values = []
+  $scope.value_for = (field)->
+    if field
+      return _.find $scope.field_values, (v)->
+        v.field_definition_id == field.id
 
-    $scope.fetch_field_values = ()->
-      schema_id = currentSchema.id()
-      Restangular.one("cases", kase.id)
-        .getList('field_values',{schema_id: schema_id})
-        .then (resp)->
-          $scope.field_values = resp
+  $scope.submit = ->
+    $scope.kase.put()
 
-    $scope.$watch "current_schema.id()", (n,o)->
-      $scope.fetch_field_values() if n
-
-    $scope.value_for = (field)->
-      if field
-        return _.find $scope.field_values, (v)->
-          v.field_definition_id == field.id
-
-    $scope.submit = ->
-      $scope.kase.put()
-
-    $scope.refresh = ->
-      $scope.kase.get().then (resp)->
-        $scope.kase = resp
+  $scope.refresh = ->
+    $scope.kase.get().then (resp)->
+      $scope.kase = resp
 
 
 

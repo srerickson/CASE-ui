@@ -16,7 +16,27 @@ angular.module("case-ui", [
 
 .config( ($stateProvider, $urlRouterProvider, RestangularProvider) ->
 
-  $urlRouterProvider.otherwise "/home"
+  $urlRouterProvider.otherwise ""
+
+  $stateProvider.state "root",
+    abstract: true
+    url: '?schema_id&evaluation_id'
+    views:
+      '':
+        template: '<ui-view/>'
+      'user-config':
+        templateUrl: 'user_config/user.tpl.html'
+        controller: 'UserConfigCtrl'
+    resolve:
+      schema_id: ["$stateParams",($stateParams)->
+        return parseInt($stateParams.schema_id)
+      ],
+      evaluation_id: ["$stateParams",($stateParams)->
+        return parseInt($stateParams.evaluation_id)
+      ]
+
+
+
 
   # Restangular Config
   RestangularProvider.setDefaultHeaders({'Content-Type': 'application/json'})
@@ -77,29 +97,29 @@ angular.module("case-ui", [
 
 
 
-.controller "AppCtrl", ($scope, $location, currentUser, currentSchema) ->
+.controller "AppCtrl",
+  ($scope, $location, currentUser, $stateParams) ->
   
-  currentUser.get().then(
-    (resp)->
-      return resp
-    ,(err)->
+    # force login
+    currentUser.get().then(
+      (resp)->
+        return resp
+      ,(err)->
+        currentUser.login_prompt()
+    )
+
+    # FIXME - this needs to handle urls that are already 'full'
+    $scope.asset_url = (path)->
+      base = currentUser.server() || ""
+      base + path
+
+    $scope.$on 'event:auth-loginRequired', (e, data)->
       currentUser.login_prompt()
-  )
-    .then ()-> currentSchema.get_available()
-    .then ()-> currentSchema.set_active()
-
-  # FIXME - this needs to handle urls that are already 'full'
-  $scope.asset_url = (path)->
-    base = currentUser.server() || ""
-    base + path
-
-  $scope.$on 'event:auth-loginRequired', (e, data)->
-    currentUser.login_prompt()
 
 
-  $scope.$on "$stateChangeSuccess", (ev, tState, tParams, fState, fParams) ->
-    if angular.isDefined(tState.data.pageTitle)
-      $scope.pageTitle = tState.data.pageTitle + " | case-ui"
+    $scope.$on "$stateChangeSuccess", (ev, tState, tParams, fState, fParams) ->
+      if angular.isDefined(tState.data.pageTitle)
+        $scope.pageTitle = tState.data.pageTitle + " | case-ui"
 
 
 

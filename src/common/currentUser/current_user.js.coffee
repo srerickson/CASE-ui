@@ -17,11 +17,18 @@ angular.module("case-ui.current-user", [
       Restangular.all("users").customGET('current_user').then (user) ->
         currentUser.user = user
 
+    currentUser.id = ->
+      this.user.id if this.user
+
     currentUser.name = ->
       this.user.name if this.user
 
     currentUser.email = ->
-      this.user.email if this.email
+      this.user.email if this.user
+
+    currentUser.default_schema_id = ->
+      if this.user and this.user.configs
+        this.user.configs.default_schema_id
 
     currentUser.logged_in = ->
       !!$window.sessionStorage.token
@@ -40,6 +47,8 @@ angular.module("case-ui.current-user", [
         controller: 'LoginCtrl'
         resolve:
           user: ()-> currentUser.user
+        # keyboard: false
+        backdrop: 'static'
       }).result.then(
         (user_connection)->
           if user_connection.token  # succesful login
