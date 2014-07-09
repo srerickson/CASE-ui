@@ -10,6 +10,7 @@ angular.module("case-ui", [
   "ui.router"
   "restangular"
   "ui.bootstrap"
+  "inplaceEdit"
   "angular-loading-bar"
 ])
 

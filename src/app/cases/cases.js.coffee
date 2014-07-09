@@ -1,7 +1,8 @@
 angular.module("case-ui.cases", [
-  "ui.router"
+  "case-ui.fields"
   "case-ui.globals"
   "case-ui.current-user"
+  "ui.router"
   "restangular"
   "blueimp.fileupload"
 ])
@@ -87,25 +88,22 @@ angular.module("case-ui.cases", [
     $scope.$watch "current_schema.id()", (n,o)->
       $scope.fetch_field_values() if n
 
-    $scope.lookup_val = (field)->
-      val = _.find $scope.field_values, (v)->
-        v.field_definition_id == field.id
-      if val
-        if field.type == "SelectField"
-          option = _.find field.value_options.select, (opt)->
-            opt.id == val.value
-          option.name
-        else
-          val.value
-      else
-        ""
+    $scope.value_for = (field)->
+      if field
+        return _.find $scope.field_values, (v)->
+          v.field_definition_id == field.id
+
+    $scope.submit = ->
+      $scope.kase.put()
+
+    $scope.refresh = ->
+      $scope.kase.get().then (resp)->
+        $scope.kase = resp
+
 
 
 # New Case Controller
 #
 .controller "NewCaseCtrl", ($scope, kase)->
   $scope.kase = {}
-
-
-
 

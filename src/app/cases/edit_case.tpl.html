@@ -1,13 +1,44 @@
 <div class="edit_case case">
 
-  <div class="row">
-    <div class="col-sm-12 field_name">
-      <h4 class="case_name">
-        <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq100)}}">
-        {{kase.name}}
-      </h4>
-      {{kase.description}}
+  <div class="row inplace-edit">
+
+    <div class="col-sm-12 inplace-edit-form">
+
+      <form role="form">
+        <div class="col-sm-2">
+          <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq100)}}" />
+        </div>
+        <div class="col-sm-9">
+          <div class="form-group">
+            <input ng-model="kase.name" type="text" class="form-control" />
+          </div>
+          <div class="form-group">
+            <textarea ng-model="kase.description" placeholder="description" class="form-control" />
+          </div>
+        </div>
+        <div class="col-sm-1">
+          <div class="form-group">
+            <a href ng-click="kase.put()" class="btn btn-primary">Save</a>
+            <a href ng-click="refresh()" class="btn btn-warning inplace-edit-toggle">Cancel</a>
+          </div>
+        </div>
+      </form>
     </div>
+    <div class="col-sm-12 inplace-edit-show">
+      <div class="col-sm-2">
+        <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq100)}}">
+      </div>
+      <div class="col-sm-9">
+        <h4 class="case_name">
+          {{kase.name}}
+        </h4>
+        {{kase.description}}
+      </div>
+      <div class="col-sm-1">
+        <a href class="inplace-edit-toggle">edit</a>
+      </div>
+    </div>
+
   </div>
 
 
@@ -16,13 +47,47 @@
       {{field_set.name}}
     </div>
     <div class="panel-body">
-      <div class="row field" ng-repeat="field in field_set.field_definitions ">
+
+      <div  class="row field inplace-edit" 
+            ng-repeat="_fd in field_set.field_definitions" 
+            ng-controller="FieldCtrl"
+            ng-init="init_field_value(_fd)">
+
+
         <div class="col-sm-2 field_name">
-          {{field.name}}
+          {{field_definition.name }}
         </div>
-        <div class="col-sm-10 field_value">
-          {{ lookup_val(field) }}
+
+        <div class="col-sm-9">
+          <div class="field_value" >
+            <div class="inplace-edit-form">
+              <form name="field_value_form">
+                <div ng-include=' template_path(["form"]) '></div>
+                <a href class="btn btn-success" ng-click="save()">
+                  save
+                </a>
+              </form>
+            </div>
+            <div class="inplace-edit-show" ng-include=' template_path() '>
+              <div ng-include=' template_path() '></div>
+            </div>
+          </div>
         </div>
+
+        <div class="col-sm-1">
+          <div class="inplace-edit-form">
+            <a href class="inplace-edit-toggle" ng-click="refresh()">
+              <i class="fa fa-times"></i> 
+            </a>
+          </div> 
+          <div class="inplace-edit-show">
+            <a href class="inplace-edit-toggle">
+              <i class="fa fa-pencil"/>
+            </a>
+          </div>
+        </div>
+
+
       </div>
     </div>
   </div>
