@@ -39,13 +39,13 @@
         <div class="collapse navbar-collapse" collapse="menuCollapsed">
           <ul class="nav navbar-nav">
             <li ui-sref-active="active">
-              <a href ui-sref="cases">
+              <a href ui-sref="cases({case_filter: 'all'})">
                 <i class="fa fa-puzzle-piece"></i>
                 Cases
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" ui-sref="evaluations">
                 <i class="fa fa-sliders"></i>
                Evaluations
               </a>
@@ -57,13 +57,13 @@
               </a>
             </li>
           </ul>
-          <div active-user-configs></div>
+          <div ui-view="user-config"></div>
 
         </div>
       </div>
     </div>
 
-    <div class="container" ui-view="main"></div>
+    <div class="container" ui-view></div>
 
     <footer class="footer">
       <div class="container">
