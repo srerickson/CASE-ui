@@ -6,6 +6,7 @@ angular.module("case-ui", [
   "case-ui.home"
   "case-ui.schemas"
   "case-ui.cases"
+  "case-ui.evaluations"
   "case-ui.user-config"
   "ui.router"
   "restangular"
@@ -20,7 +21,7 @@ angular.module("case-ui", [
 
   $stateProvider.state "root",
     abstract: true
-    url: '?schema_id&evaluation_id'
+    url: '?schema_id&evaluation_set_id'
     views:
       '':
         template: '<ui-view/>'
@@ -31,8 +32,8 @@ angular.module("case-ui", [
       schema_id: ["$stateParams",($stateParams)->
         return parseInt($stateParams.schema_id)
       ],
-      evaluation_id: ["$stateParams",($stateParams)->
-        return parseInt($stateParams.evaluation_id)
+      evaluation_set_id: ["$stateParams",($stateParams)->
+        return parseInt($stateParams.evaluation_set_id)
       ]
 
 

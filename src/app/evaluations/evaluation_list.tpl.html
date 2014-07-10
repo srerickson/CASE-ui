@@ -1,0 +1,43 @@
+
+
+<div class="row" class = "evaluation_response_list">
+  <div class="col-sm-10">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <td colspan='2'>Case</td>
+          <td ng-repeat="question in evaluation.questions"
+              ng-class="{subquestion: question.is_subquestion}">
+            {{question.param}}
+          </td>
+
+        <tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="kase in evaluated_cases" ng-click="">
+          <td>
+            <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq60)}}">
+          </td>
+          <td>
+            {{kase.name}}
+          </td>
+          <td ng-repeat="response in responses_for(kase)">
+            {{response["1"]}} / {{response["-1"]}} / {{response["0"]}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-2">
+
+    <div class="btn-group btn-group-justified">
+    </div>
+
+    <div>
+    </div>
+
+  </div>
+
+
+</div>
+
