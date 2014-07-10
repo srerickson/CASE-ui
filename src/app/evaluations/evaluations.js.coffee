@@ -1,5 +1,6 @@
 angular.module("case-ui.evaluations", [
   "case-ui.current-user"
+  "case-ui.evaluation-vis"
   "ui.router"
   "restangular"
 ])
@@ -38,10 +39,17 @@ angular.module("case-ui.evaluations", [
 
 
     $scope.responses_for = (kase)->
-      if evaluation and evaluation.aggregates
-        evaluation.aggregates.filter (response)->
+      if evaluation and evaluation.aggregates and evaluation.questions
+        # kase's responses
+        for_case = evaluation.aggregates.filter (response)->
           response.case_id == kase.id
+        # sort by question order
+        for_case.sort (a,b)->
+          q_a = $scope.question_for(a)
+          q_b = $scope.question_for(b)
+          q_a.position - q_b.position
 
-
+    $scope.question_for = (response)->
+      _.find evaluation.questions, (q)-> q.id == response.question_id
 
 

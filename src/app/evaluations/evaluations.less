@@ -1,0 +1,34 @@
+
+.evaluation_list.aggregated {
+
+  thead {
+    td.subquestion {
+      display:block;
+      width: 50px;
+      position:relative;
+      overflow: hidden;
+      border:none;
+    }
+  }
+
+  td.pie_container {
+
+    width: 80px;
+    div[evaluation-pie] {
+      width: 60px;
+      height:60px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    &.subquestion {
+      width: 50px;
+      div[evaluation-pie] {
+        width: 40px;
+        height:40px;
+      }
+    }
+
+  }
+
+}
