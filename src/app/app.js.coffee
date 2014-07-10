@@ -99,14 +99,25 @@ angular.module("case-ui", [
 
 
 .controller "AppCtrl",
-  ($scope, $location, currentUser, $stateParams) ->
+  ($scope, $location, currentUser, $state, $stateParams) ->
   
+    # handle 401
+    $scope.$on 'event:auth-loginRequired', (e, data)->
+      currentUser.login_prompt()
+
     # force login
     currentUser.get().then(
       (resp)->
         return resp
       ,(err)->
-        currentUser.login_prompt()
+        # handle 404 on get user
+        currentUser.login_prompt().then ()->
+          # reload
+          $state.transitionTo(
+            $state.current,
+            $stateParams,
+            { reload: true, inherit: true, notify: true }
+          )
     )
 
     # FIXME - this needs to handle urls that are already 'full'
@@ -114,8 +125,7 @@ angular.module("case-ui", [
       base = currentUser.server() || ""
       base + path
 
-    $scope.$on 'event:auth-loginRequired', (e, data)->
-      currentUser.login_prompt()
+
 
 
     $scope.$on "$stateChangeSuccess", (ev, tState, tParams, fState, fParams) ->
