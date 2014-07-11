@@ -7,11 +7,10 @@ angular.module("case-ui.schemas.new",[
 
 .config( ($stateProvider) ->
   $stateProvider.state "new_schema",
+    parent: "root"
     url: "/schemas/new"
-    views:
-      main:
-        controller: "NewSchemaCtrl"
-        templateUrl: "schemas/new/form.tpl.html"
+    controller: "NewSchemaCtrl"
+    templateUrl: "schemas/new/form.tpl.html"
     data:
       pageTitle: "New Schema"
 

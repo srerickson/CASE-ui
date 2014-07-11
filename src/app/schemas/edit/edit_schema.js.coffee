@@ -10,11 +10,10 @@ angular.module("case-ui.schemas.edit",[
 
 .config( ($stateProvider) ->
   $stateProvider.state "edit_schema",
+    parent: "root"
     url: "/schemas/edit/:schema_id"
-    views:
-      main:
-        controller: "EditSchemaCtrl"
-        templateUrl: "schemas/edit/edit_schema.tpl.html"
+    controller: "EditSchemaCtrl"
+    templateUrl: "schemas/edit/edit_schema.tpl.html"
     data:
       pageTitle: "Edit Schema"
     resolve:

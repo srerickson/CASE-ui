@@ -21,7 +21,7 @@ angular.module("case-ui", [
 
   $stateProvider.state "root",
     abstract: true
-    url: '?schema_id&evaluation_set_id'
+    url: '?current_schema_id&evaluation_set_id'
     views:
       '':
         template: '<ui-view/>'
@@ -29,8 +29,8 @@ angular.module("case-ui", [
         templateUrl: 'user_config/user.tpl.html'
         controller: 'UserConfigCtrl'
     resolve:
-      schema_id: ["$stateParams",($stateParams)->
-        return parseInt($stateParams.schema_id)
+      current_schema_id: ["$stateParams",($stateParams)->
+        return parseInt($stateParams.current_schema_id)
       ],
       evaluation_set_id: ["$stateParams",($stateParams)->
         return parseInt($stateParams.evaluation_set_id)

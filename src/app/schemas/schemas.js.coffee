@@ -9,11 +9,10 @@ angular.module("case-ui.schemas",[
 
 .config( ($stateProvider) ->
   $stateProvider.state "schemas",
+    parent: "root"
     url: "/schemas"
-    views:
-      main:
-        controller: "SchemaListCtrl"
-        templateUrl: "schemas/schemas.tpl.html"
+    controller: "SchemaListCtrl"
+    templateUrl: "schemas/schemas.tpl.html"
 
     data:
       pageTitle: "Schemas"

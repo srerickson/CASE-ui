@@ -2,20 +2,22 @@
 
   <div ng-show="current_user.logged_in()">
     
-    <span class="small">
-      connected to {{current_user.case_server()}} as {{current_user.name()}}
-    </span>
+    <div class="small">
+      user: {{current_user.name()}}
+      <a href ng-click="current_user.logout()" >logout</a>
+    </div>
 
-    <select ng-model="current_schema_id" 
-            ng-options="s.id as s.name for s in schemas"
-            ng-show="schemas.length"/>
+    <div class="small">
+      active schema: <select ng-model="current_schema_id" 
+              ng-options="s.id as s.name for s in schemas"
+              ng-show="schemas.length"/>
 
 
-    <select ng-model="current_evaluation_set_id" 
-            ng-options="es.id as es.name for es in evaluation_sets"
-            ng-show="evaluation_sets.length"/>
+      active evaluation set: <select ng-model="current_evaluation_set_id" 
+              ng-options="es.id as es.name for es in evaluation_sets"
+              ng-show="evaluation_sets.length"/>
+    </div>
 
-    <a href ng-click="current_user.logout()" >logout</a>
   </div>
 
   <div ng-show="!current_user.logged_in()">

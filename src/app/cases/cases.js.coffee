@@ -17,8 +17,9 @@ angular.module("case-ui.cases", [
     data:
       pageTitle: "Cases"
     resolve:
-      schema: ["schema_id","Restangular", (schema_id, Restangular)->
-          Restangular.one("schemas",schema_id).get().then(
+      schema:["current_schema_id","Restangular",
+        (current_schema_id,Restangular)->
+          Restangular.one("schemas",current_schema_id).get().then(
             (resp)->
               resp
             ,(err)->
@@ -46,8 +47,9 @@ angular.module("case-ui.cases", [
       kase: ["Restangular", "$stateParams", (Restangular, $stateParams)->
         Restangular.one('cases', $stateParams.case_id ).get()
       ]
-      schema: ["schema_id","Restangular", (schema_id, Restangular)->
-          Restangular.one("schemas",schema_id).get().then(
+      schema: ["current_schema_id","Restangular",
+        (current_schema_id,Restangular)->
+          Restangular.one("schemas",current_schema_id).get().then(
             (resp)->
               resp
             ,(err)->
