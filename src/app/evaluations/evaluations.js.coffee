@@ -15,9 +15,9 @@ angular.module("case-ui.evaluations", [
     data:
       pageTitle: "Evaluation Responses"
     resolve:
-      evaluation: ["evaluation_set_id","Restangular",
-        (evaluation_set_id, Restangular)->
-          Restangular.one("evaluations/sets",evaluation_set_id).get().then(
+      evaluation: ["current_set_id","Restangular",
+        (current_set_id, Restangular)->
+          Restangular.one("evaluations/sets",current_set_id).get().then(
             (resp)->
               resp
             ,(err)->

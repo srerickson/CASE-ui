@@ -21,7 +21,7 @@ angular.module("case-ui", [
 
   $stateProvider.state "root",
     abstract: true
-    url: '?current_schema_id&evaluation_set_id'
+    url: '?current_schema_id&current_set_id'
     views:
       '':
         template: '<ui-view/>'
@@ -32,8 +32,8 @@ angular.module("case-ui", [
       current_schema_id: ["$stateParams",($stateParams)->
         return parseInt($stateParams.current_schema_id)
       ],
-      evaluation_set_id: ["$stateParams",($stateParams)->
-        return parseInt($stateParams.evaluation_set_id)
+      current_set_id: ["$stateParams",($stateParams)->
+        return parseInt($stateParams.current_set_id)
       ]
 
 
