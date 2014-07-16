@@ -6,7 +6,7 @@
       <thead>
         <tr>
           <td colspan='2'>Case</td>
-          <td ng-repeat="question in evaluation.questions"
+          <td ng-repeat="question in evaluation_set.questions"
               ng-class="{subquestion: question.is_subquestion}">
             {{question.param}}
           </td>
@@ -14,15 +14,15 @@
         <tr>
       </thead>
       <tbody>
-        <tr ng-repeat="kase in evaluated_cases" ng-click="" class=>
+        <tr ng-repeat="kase in evaluation_set.cases" ng-click="" class=>
           <td>
             <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq60)}}">
           </td>
           <td>
             {{kase.name}}
           </td>
-          <td ng-repeat="response in responses_for(kase)"
-              ng-class="{subquestion: question_for(response).is_subquestion}"
+          <td ng-repeat="response in evaluation_set.responses_for(kase)"
+              ng-class="{subquestion: evaluation_set.question_for(response).is_subquestion}"
               class="pie_container">
             <div evaluation-pie ng-model="response">
             </div>
@@ -34,6 +34,8 @@
   <div class="col-sm-2">
 
     <div class="btn-group btn-group-justified">
+      <a class="btn btn-default" ui-sref-active="active" ui-sref="evaluations({all_responses:'0'})"> Yours </a>
+      <a class="btn btn-default" ui-sref-active="active" ui-sref="evaluations({all_responses:'1'})"> All </a>
     </div>
 
     <div>

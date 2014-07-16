@@ -1,5 +1,6 @@
 angular.module("case-ui.evaluations", [
   "case-ui.current-user"
+  "case-ui.evaluation-set"
   "case-ui.evaluation-vis"
   "ui.router"
   "restangular"
@@ -9,47 +10,38 @@ angular.module("case-ui.evaluations", [
 .config ($stateProvider) ->
   $stateProvider.state "evaluations",
     parent: "root"
-    url: "/evaluations"
+    url: "/evaluations?all_responses"
     controller: "EvaluationListCtrl"
     templateUrl: "evaluations/evaluation_list.tpl.html"
     data:
       pageTitle: "Evaluation Responses"
     resolve:
-      evaluation: ["current_set_id","Restangular",
-        (current_set_id, Restangular)->
-          Restangular.one("evaluations/sets",current_set_id).get().then(
+      evaluation_set: ["current_set_id","evaluationSetFactory",
+        (current_set_id, evaluationSetFactory)->
+          evaluationSetFactory(current_set_id).then(
             (resp)->
-              resp
+              return resp
             ,(err)->
-              null
+              console.log err
           )
       ]
 
 
 
 .controller "EvaluationListCtrl",
-  ($scope, Restangular, $state, $stateParams, evaluation)->
+  ($scope, Restangular, $state, $stateParams, evaluation_set)->
 
-    $scope.evaluation = evaluation
-    $scope.evaluated_cases = []
+    $scope.evaluation_set = evaluation_set
 
-    if evaluation
-      evaluation.all("cases").getList().then (resp)->
-        $scope.evaluated_cases = resp
+    if $stateParams.all_responses == '1'
+      evaluation_set.refresh_cases()
+      evaluation_set.refresh_responses({aggregate:true})
+    else
+      evaluation_set.refresh_cases({own: true})
+      evaluation_set.refresh_responses({own: true, aggregate:true})
 
 
-    $scope.responses_for = (kase)->
-      if evaluation and evaluation.aggregates and evaluation.questions
-        # kase's responses
-        for_case = evaluation.aggregates.filter (response)->
-          response.case_id == kase.id
-        # sort by question order
-        for_case.sort (a,b)->
-          q_a = $scope.question_for(a)
-          q_b = $scope.question_for(b)
-          q_a.position - q_b.position
 
-    $scope.question_for = (response)->
-      _.find evaluation.questions, (q)-> q.id == response.question_id
+
 
 
