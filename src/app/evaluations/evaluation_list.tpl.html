@@ -23,10 +23,9 @@
           </td>
           <td ng-repeat="q in evaluation_set.questions"
               ng-class="{subquestion: q.is_subquestion}"
-              ng-controller="EvaluationListCellCtrl"
-              ng-init="cell_init(k, q)"
-              class="pie_container">
-            <div evaluation-pie="evaluation_set.responses_lookup[kase.id][question.id][0]"></div>
+              class="pie_container"
+              ng-click="response_detail(k,q)">
+            <div evaluation-pie="evaluation_set.responses_lookup[k.id][q.id][0]"></div>
 
           </td>
         </tr>

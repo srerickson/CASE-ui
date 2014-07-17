@@ -1,6 +1,7 @@
 draw_answer_pie = (y_c, n_c, na_c, y_comments, n_comments, na_comments) ->
   elem = this[0]
   $elem = this
+  $elem.empty()
   data = [y_c, n_c, na_c]
 
   total = y_c + n_c + na_c
@@ -50,19 +51,19 @@ angular.module('case-ui.evaluation-vis',[])
 
   linker = (scope, elem, attrs)->
 
-    scope.$watch attrs.evaluationPie, (n,o)->
-      if n and n!= o
-        setTimeout( ()->
-          draw_answer_pie.apply( elem,[
-            n.yes_count,
-            n.no_count,
-            n.n_a_count,
-            # scope.result.blank_count,
-            n.yes_comment_count,
-            n.no_comment_count,
-            n.n_a_comment_count,
-          ])
-        ,1)
+    scope.$watch attrs.evaluationPie, (n)->
+      return unless n
+      setTimeout( ()->
+        draw_answer_pie.apply( elem,[
+          n.yes_count,
+          n.no_count,
+          n.n_a_count,
+          # scope.result.blank_count,
+          n.yes_comment_count,
+          n.no_comment_count,
+          n.n_a_comment_count,
+        ])
+      ,1)
 
   return {
     link: linker
