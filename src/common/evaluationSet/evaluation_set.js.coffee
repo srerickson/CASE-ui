@@ -11,8 +11,7 @@ angular.module("case-ui.evaluation-set", [
 
     state.cases       = [] # evaluated cases
     state.questions   = [] # eval set's questions
-    state.responses   = [] # retreived responses
-    state.aggregates  = [] # aggregate responses
+    state.responses   = [] # retreived responses (may be aggregated!)
 
     ##
     # Case loading functions
@@ -38,7 +37,7 @@ angular.module("case-ui.evaluation-set", [
 
     ##
     # Response Loading Functions
-    ##
+    #
     state.responses_promise = null
     state.load_responses = (params = {})->
       if !state.responses_promise
@@ -58,20 +57,11 @@ angular.module("case-ui.evaluation-set", [
 
 
 
-    state.responses_for = (kase)->
-      if state.evaluation_set and state.responses
-        # kase's responses
-        for_case = state.responses.filter (response)->
-          response.case_id == kase.id
-        # sort by question order
-        for_case.sort (a,b)->
-          q_a = state.question_for(a)
-          q_b = state.question_for(b)
-          q_a.position - q_b.position
+    state.responses_for = (kase, question)->
+      if state.evaluation_set and state.responses.length
+        state.responses.filter (response)->
+          response.case_id == kase.id and response.question_id == question.id
 
-
-    state.question_for = (response)->
-      _.find state.evaluation_set.questions, (q)-> q.id == response.question_id
 
 
     # return the promise

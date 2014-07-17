@@ -6,26 +6,28 @@
       <thead>
         <tr>
           <td colspan='2'>Case</td>
-          <td ng-repeat="question in evaluation_set.questions"
-              ng-class="{subquestion: question.is_subquestion}">
-            {{question.param}}
+          <td ng-repeat="q in evaluation_set.questions"
+              ng-class="{subquestion: q.is_subquestion}">
+            {{q.param}}
           </td>
 
         <tr>
       </thead>
       <tbody>
-        <tr ng-repeat="kase in evaluation_set.cases" ng-click="" class=>
+        <tr ng-repeat="kase in evaluation_set.cases">
           <td>
             <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq60)}}">
           </td>
           <td>
             {{kase.name}}
           </td>
-          <td ng-repeat="response in evaluation_set.responses_for(kase)"
-              ng-class="{subquestion: evaluation_set.question_for(response).is_subquestion}"
+          <td ng-controller="EvaluationListCellCtrl"
+              ng-repeat="q in evaluation_set.questions"
+              ng-class="{subquestion: q.is_subquestion}"
+              ng-init="init(kase, q)"
               class="pie_container">
-            <div evaluation-pie ng-model="response">
-            </div>
+            <div evaluation-pie ng-model="response"></div>
+
           </td>
         </tr>
       </tbody>
