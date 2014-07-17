@@ -12,6 +12,7 @@ angular.module("case-ui.evaluation-set", [
     state.cases       = [] # evaluated cases
     state.questions   = [] # eval set's questions
     state.responses   = [] # retreived responses (may be aggregated!)
+    state.responses_lookup = [] # 2D lookup matrix for responses
 
     ##
     # Case loading functions
@@ -46,6 +47,10 @@ angular.module("case-ui.evaluation-set", [
                                                         .getList(params)
           state.responses_promise.then (resp)->
             state.responses = resp
+            for r in state.responses # build lookup matrix
+              state.responses_lookup[r.case_id] ||= []
+              state.responses_lookup[r.case_id][r.question_id] ||= []
+              state.responses_lookup[r.case_id][r.question_id].push(r)
         else
           state.responses_promise = null
       else
@@ -54,13 +59,6 @@ angular.module("case-ui.evaluation-set", [
     state.refresh_responses = (params = {})->
       state.responses_promise = null
       state.load_responses(params)
-
-
-
-    state.responses_for = (kase, question)->
-      if state.evaluation_set and state.responses.length
-        state.responses.filter (response)->
-          response.case_id == kase.id and response.question_id == question.id
 
 
 

@@ -14,19 +14,19 @@
         <tr>
       </thead>
       <tbody>
-        <tr ng-repeat="kase in evaluation_set.cases">
+        <tr ng-repeat="k in evaluation_set.cases">
           <td>
-            <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq60)}}">
+            <img class="img-thumbnail" ng-show="k._image_urls.sq60" ng-src="{{$parent.asset_url(k._image_urls.sq60)}}">
           </td>
           <td>
-            {{kase.name}}
+            {{k.name}}
           </td>
-          <td ng-controller="EvaluationListCellCtrl"
-              ng-repeat="q in evaluation_set.questions"
+          <td ng-repeat="q in evaluation_set.questions"
               ng-class="{subquestion: q.is_subquestion}"
-              ng-init="init(kase, q)"
+              ng-controller="EvaluationListCellCtrl"
+              ng-init="cell_init(k, q)"
               class="pie_container">
-            <div evaluation-pie="response"></div>
+            <div evaluation-pie="evaluation_set.responses_lookup[kase.id][question.id][0]"></div>
 
           </td>
         </tr>

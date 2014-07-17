@@ -42,18 +42,9 @@ angular.module("case-ui.evaluations", [
 
 .controller "EvaluationListCellCtrl", ($scope)->
 
-  $scope.aggregate = true
-  $scope.responses = []
-  $scope.response = {}
-
-  $scope.init = (k,q)->
+  $scope.cell_init = (k,q)->
     $scope.kase = k
     $scope.question = q
 
-  $scope.$watch "evaluation_set.responses.length", (n,o)->
-    if n and n != o and $scope.question and $scope.kase
-      resp = $scope.evaluation_set.responses_for($scope.kase,$scope.question)
-      $scope.responses = resp
-      $scope.response = resp[0]
 
 
