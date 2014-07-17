@@ -50,7 +50,7 @@ angular.module("case-ui.evaluations", [
     $scope.kase = k
     $scope.question = q
 
-  $scope.$watch "evaluation_set.responses", (n,o)->
+  $scope.$watch "evaluation_set.responses.length", (n,o)->
     if n and n != o and $scope.question and $scope.kase
       resp = $scope.evaluation_set.responses_for($scope.kase,$scope.question)
       $scope.responses = resp

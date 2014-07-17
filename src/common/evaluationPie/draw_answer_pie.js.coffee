@@ -49,29 +49,23 @@ angular.module('case-ui.evaluation-vis',[])
 .directive "evaluationPie", [ ()->
 
   linker = (scope, elem, attrs)->
-    if scope.subQuestion()
-      elem.addClass('sub_question')
 
-    unless scope.result == undefined
-      setTimeout( ()->
-        draw_answer_pie.apply( elem,[
-          scope.result.yes_count,
-          scope.result.no_count,
-          scope.result.n_a_count,
-          # scope.result.blank_count,
-          scope.result.yes_comment_count,
-          scope.result.no_comment_count,
-          scope.result.n_a_comment_count,
-        ])
-      ,1)
+    scope.$watch attrs.evaluationPie, (n,o)->
+      if n and n!= o
+        setTimeout( ()->
+          draw_answer_pie.apply( elem,[
+            n.yes_count,
+            n.no_count,
+            n.n_a_count,
+            # scope.result.blank_count,
+            n.yes_comment_count,
+            n.no_comment_count,
+            n.n_a_comment_count,
+          ])
+        ,1)
 
   return {
     link: linker
-    scope:{
-      result:"=ngModel"
-      subQuestion: "&"
-    }
-
   }
 
 ]
