@@ -63,7 +63,7 @@ module.exports = {
   vendor_files: {
     js: [
       'vendor/jquery/dist/jquery.min.js',
-      'vendor/jquery-ui/ui/minified/jquery.ui.core.min.js',
+      'vendor/jquery-ui/ui/minified/core.min.js',
       'vendor/jquery-ui/ui/minified/widget.min.js',
       'vendor/jquery-ui/ui/minified/mouse.min.js',
       'vendor/jquery-ui/ui/minified/sortable.min.js',
