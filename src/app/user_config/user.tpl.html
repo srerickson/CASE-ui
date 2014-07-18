@@ -1,28 +1,36 @@
-<div>
 
-  <div ng-show="current_user.logged_in()">
-    
-    <div class="small">
-      user: {{current_user.name()}}
-      <a href ng-click="current_user.logout()" >logout</a>
-    </div>
+<li  style="display: list-item;" ng-show="current_user.logged_in()">
+  
+  <div class="dropdown-header">logged in as {{current_user.name()}}</div>
+  <a href ng-click="current_user.logout()" >logout</a>
 
-    <div class="small">
-      active schema: <select ng-model="current_schema_id" 
-              ng-options="s.id as s.name for s in schemas"
-              ng-show="schemas.length"/>
+</li>
 
+<li class="divider"></li>
+<li class="dropdown-header">Select Active Schema</li>
+<li ng-repeat="schema in schemas" ng-class="{disabled: schema.id == current_schema_id}">
+  <a href ng-click="set_current_schema(schema.id)">
+    {{schema.name}}
+    <i ng-show="schema.id == current_schema_id" class="fa fa-check"/>
+  </a>
+  
+</li>
 
-      active evaluation set: <select ng-model="current_evaluation_set_id" 
-              ng-options="es.id as es.name for es in evaluation_sets"
-              ng-show="evaluation_sets.length"/>
-    </div>
+<li class="divider"></li>
+<li class="dropdown-header">Select Active Question Set</li>
+<li ng-repeat="set in evaluation_sets" ng-class="{disabled: set.id == current_set_id}">
+  <a href ng-click="set_current_set(set.id)">
+    {{set.name}}
+    <i ng-show="set.id == current_set_id" class="fa fa-check"/>
+  </a>
+</li>
 
-  </div>
+<li class="divider"></li>
+<li>
+  <a href ui-sref="new_schema"><i class="fa fa-plus"/> New Schema</a>
+</li>
+<li>
+  <a href ui-sref="new_question_set"><i class="fa fa-plus"/> New Question Set</a>
+</li>
 
-  <div ng-show="!current_user.logged_in()">
-    <a href ng-click="current_user.login_prompt()">login</a>
-  </div>
-
-</div>
 

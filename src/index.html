@@ -45,20 +45,20 @@
               </a>
             </li>
             <li>
-              <a href="#" ui-sref="evaluations">
+              <a href="#" ui-sref="evaluations({all_responses: '0'})">
                 <i class="fa fa-sliders"></i>
                Evaluations
               </a>
             </li>
-            <li ui-sref-active="active">
-              <a href ui-sref="schemas">
-                <i class="fa fa-sitemap"></i>
-                Schemas
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown pull-right">
+              <a href class="dropdown-toggle" id="configs-menu" data-toggle="dropdown">
+                <i class="fa fa-gears"></i>
               </a>
+              <ul ui-view="user-config" class="dropdown-menu case-user-configs" aria-labelledby="configs-menu"></ul>
             </li>
           </ul>
-          <div ui-view="user-config"></div>
-
         </div>
       </div>
     </div>

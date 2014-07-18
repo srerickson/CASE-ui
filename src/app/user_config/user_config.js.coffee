@@ -12,7 +12,7 @@ angular.module("case-ui.user-config", [
   $state, current_schema_id, current_set_id)->
 
     $scope.current_schema_id = current_schema_id
-    $scope.current_evaluation_set_id = current_set_id
+    $scope.current_set_id = current_set_id
 
     $scope.schemas = []
     $scope.evaluation_sets = []
@@ -25,14 +25,16 @@ angular.module("case-ui.user-config", [
 
     $scope.current_user = currentUser
 
-    $scope.$watch 'current_schema_id', (n,o)->
-      if $state.current.name and n and n != 0
-        $state.go($state.current.name,{current_schema_id: n})
+    $scope.set_current_schema = (id)->
+      if id and id != current_schema_id
+        $state.go($state.current.name,{current_schema_id: id})
 
-
-    $scope.$watch 'current_evaluation_set_id', (n,o)->
-      if $state.current.name and n and n != 0
+    $scope.set_current_set = (id)->
+      if id and id != current_set_id
         $state.go($state.current.name,{current_set_id: n})
+
+
+
 
 
 
