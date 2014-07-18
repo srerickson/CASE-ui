@@ -31,7 +31,7 @@ angular.module("case-ui.user-config", [
 
     $scope.set_current_set = (id)->
       if id and id != current_set_id
-        $state.go($state.current.name,{current_set_id: n})
+        $state.go($state.current.name,{current_set_id: id})
 
 
 
