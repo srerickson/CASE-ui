@@ -13,17 +13,29 @@ angular.module("case-ui.user-config", [
 
     $scope.current_schema_id = current_schema_id
     $scope.current_set_id = current_set_id
+    $scope.current_user = currentUser
 
     $scope.schemas = []
-    $scope.evaluation_sets = []
+    $scope.question_sets = []
 
-    Restangular.all('schemas').getList().then (resp)->
-      $scope.schemas = resp
+    $scope.refresh_schemas = ()->
+      Restangular.all('schemas').getList().then (resp)->
+        $scope.schemas = resp
 
-    Restangular.all('evaluations/sets').getList().then (resp)->
-      $scope.evaluation_sets = resp
+    $scope.refresh_question_sets = ()->
+      Restangular.all('evaluations/sets').getList().then (resp)->
+        $scope.question_sets = resp
 
-    $scope.current_user = currentUser
+    $scope.refresh_schemas()
+    $scope.refresh_question_sets()
+
+    $scope.$on( "questionSetsModified", ()->
+      $scope.refresh_question_sets()
+    )
+
+    $scope.$on("schemasModified", ()->
+      $scope.refresh_schemas()
+    )
 
     $scope.set_current_schema = (id)->
       if id and id != current_schema_id

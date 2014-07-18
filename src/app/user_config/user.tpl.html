@@ -8,7 +8,7 @@
 
 <li class="divider"></li>
 <li class="dropdown-header">Select Active Schema</li>
-<li ng-repeat="schema in schemas" ng-class="{disabled: schema.id == current_schema_id}">
+<li ng-repeat="schema in schemas" ng-class="{active: schema.id == current_schema_id}">
   <a href ng-click="set_current_schema(schema.id)">
     {{schema.name}}
     <i ng-show="schema.id == current_schema_id" class="fa fa-check"/>
@@ -18,7 +18,7 @@
 
 <li class="divider"></li>
 <li class="dropdown-header">Select Active Question Set</li>
-<li ng-repeat="set in evaluation_sets" ng-class="{disabled: set.id == current_set_id}">
+<li ng-repeat="set in question_sets" ng-class="{active: set.id == current_set_id}">
   <a href ng-click="set_current_set(set.id)">
     {{set.name}}
     <i ng-show="set.id == current_set_id" class="fa fa-check"/>

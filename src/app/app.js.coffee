@@ -7,6 +7,7 @@ angular.module("case-ui", [
   "case-ui.schemas"
   "case-ui.cases"
   "case-ui.evaluations"
+  "case-ui.question-sets"
   "case-ui.user-config"
   "ui.router"
   "restangular"
@@ -48,7 +49,13 @@ angular.module("case-ui", [
     # TODO: this is a littlc clunky.
     if operation == 'post' or operation == 'put'
       wrapper = {}
-      wrapper[what.substring(0, what.length-1)] = elem #FIXME
+
+      if what == "evaluations/sets"
+        wrapper_key = "set"
+      else
+        wrapper_key = what.substring(0, what.length-1)
+
+      wrapper[wrapper_key] = elem #FIXME
       wrapper
     else
       elem
@@ -86,6 +93,15 @@ angular.module("case-ui", [
         elem,
         elem.field_definitions,
         'field_definitions'
+      )
+    return elem
+  )
+  Restangular.addElementTransformer("evaluations/sets", false, (elem)->
+    if elem.questions
+      elem.questions = Restangular.restangularizeCollection(
+        elem,
+        elem.questions,
+        'questions'
       )
     return elem
   )
