@@ -40,20 +40,6 @@ angular.module("case-ui.fields", [
         tpl = "#{base_path}_#{type}.tpl.html"
       tpl
 
-  $scope.refresh = ->
-    $scope.field_value.get().then(
-      (resp)->
-        $scope.field_value = resp
-    )
-
-  $scope.save = ->
-    $scope.field_value.save().then(
-      (resp)->
-        console.log "ok"
-      ,(err)->
-        console.log "err"
-    )
-
 
   $scope.select_lookup = ->
     if $scope.field_value and $scope.field_definition

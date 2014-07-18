@@ -1,10 +1,12 @@
 <div class="modal-header">
+    <div class="pull-right"><a href ng-click="$close()"><i class="fa fa-times"/></a></div>
     <h3 class="modal-title">Response Detail</h3>
 </div>
 
-<div class="modal-body">
+<div class="modal-body table">
   <div ng-repeat="r in responses"
-       class="row inplace-edit">
+       class="row"
+       inplace-edit ng-model="responses[$index]">
 
     <div class="inplace-edit-show col-sm-12">
       <div class="col-sm-2">
@@ -26,8 +28,8 @@
         <textarea ng-model="responses[$index].comment" class="form-control" rows='2'/> 
       </div>
       <div class="col-sm-1">
-        <i class="fa fa-times inplace-edit-toggle" ng-click="cancel(responses[$index])"/>
-        <i class="fa fa-check inplace-edit-toggle" ng-click="save(responses[$index])"/>
+        <i class="fa fa-times inplace-edit-cancel"/>
+        <i class="fa fa-check inplace-edit-save"/>
       </div>
     </div>
 

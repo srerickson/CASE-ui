@@ -33,12 +33,15 @@ angular.module("case-ui.evaluations", [
 
     $scope.evaluation_set = evaluation_set
 
-    if $stateParams.all_responses == '1'
-      evaluation_set.refresh_cases()
-      evaluation_set.refresh_responses({aggregate:true})
-    else
-      evaluation_set.refresh_cases({own: true})
-      evaluation_set.refresh_responses({own: true, aggregate:true})
+    case_request_params = {}
+    response_request_params = {aggregate:true}
+
+    if $stateParams.all_responses != '1'
+      case_request_params.own = true
+      response_request_params.own = true
+
+    evaluation_set.refresh_cases(case_request_params)
+    evaluation_set.refresh_responses(response_request_params)
 
     $scope.response_detail = (k,q)->
       $modal.open({
@@ -52,15 +55,9 @@ angular.module("case-ui.evaluations", [
           all_responses: ()-> $stateParams.all_responses == '1'
       }).result.then(
         (succ)->
-          evaluation_set.refresh_response_for(k,q,{
-            aggregate:true
-            own: $stateParams.all_responses != '1'
-          })
+          evaluation_set.refresh_response_for(k,q,response_request_params)
         ,(err)->
-          evaluation_set.refresh_response_for(k,q,{
-            aggregate:true
-            own: $stateParams.all_responses != '1'
-          })
+          evaluation_set.refresh_response_for(k,q,response_request_params)
       )
 
 
