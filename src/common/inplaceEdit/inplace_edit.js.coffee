@@ -21,7 +21,12 @@ angular.module("inplaceEdit", ['restangular'])
         _cancel()
 
       _save = ()->
-        scope.resource.save().then(
+        if scope.resource.id
+          save_method = scope.resource.put
+        else
+          save_method = scope.resource.post
+
+        save_method().then(
           ()->
             scope.resource.get().then (resp)-> scope.resource = resp
             element.toggleClass('editting')

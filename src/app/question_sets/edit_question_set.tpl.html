@@ -1,7 +1,126 @@
-<div ng-include=" 'question_sets/_question_set_form.tpl.html' "/>
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h4>Editing Evaluation Question Set</hv>
+  </div>
+  <div class="panel-body" ui-view="form">
+
+    <div ng-include=" 'question_sets/_question_set_form.tpl.html' "/>
+
+    <div class="form-group col-sm-12">
+      <button ng-click="save()" class="btn btn-success pull-right">
+        Save
+      </button>
+    </div>
 
 
+    <!-- Question List -->
+    <div class="col-sm-12">
+      <label>Evaluation Questions</label>
+    </div>
+    <div class="col-sm-12" ng-show="question_set.questions.length">
 
-<div class="panel">
+      <table class="table table-condensed table-bordered table-hover">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Sub-question?</th>
+            <th>Param</th>
+            <th>Response Options</th>
+            <th style="width:30px">&nbsp;&nbsp;&nbsp;</th>
+          </tr>
+        </thead>
+
+        <tbody ui-sortable="sortable_options" ng-model="question_set.questions">
+          <tr ng-repeat="q in question_set.questions"
+              ng-controller="QuestionCtrl"
+              ng-init="question = q"
+              inplace-edit ng-model="q">
+
+            <!-- List Order -->
+            <td class="handle">
+              <span class="inplace-edit-show">
+                {{question.order}}
+              </span>
+              <span class="inplace-edit-form">
+                <i class="fa fa-reorder"/>
+              </span>
+            </td>
+
+            <!-- Question Text -->
+            <td>
+              <span class="inplace-edit-show">
+                {{question.question}}
+              </span>
+              <span class="inplace-edit-form">
+                <textarea ng-model="question.question" class="form-control"/>
+              </span>
+            </td>
+
+            <!-- Sub-Question? -->
+            <td>
+              <span class="inplace-edit-show">
+                <i class="fa fa-check" ng-show="question.is_subquestion"/>
+              </span>
+              <span class="inplace-edit-form">
+                <input type='checkbox' ng-model="question.is_subquestion">
+              </span>
+            </td>
+
+            <!-- Param -->
+            <td>
+              <span class="inplace-edit-show">
+                {{question.param}}
+              </span>
+              <span class="inplace-edit-form">
+                <input ng-model="question.param" class="form-control">
+              </span>
+            </td>
+
+            <!-- Response Options -->
+            <td>
+              <span class="inplace-edit-show">
+                {{question.response_options}}
+              </span>
+              <span class="inplace-edit-form">
+                <textarea ng-model="question.response_options" class="form-control"/>
+              </span>
+            </td>
+
+            <!-- Action Buttons -->
+            <td>
+              <div class="inplace-edit-show">
+                <a href class="btn btn-xs btn-primary btn-block inplace-edit-save"><i class="fa fa-pencil"/></a>
+                <a href class="btn btn-xs btn-danger btn-block" ng-click="remove_question(question)"><i class="fa fa-trash-o"/></a>
+
+              </div>
+              <div class="inplace-edit-form">
+                <a href class="btn btn-xs btn-success btn-block inplace-edit-save"><i class="fa fa-check-square"/></a>
+                <a href class="btn btn-xs btn-warning btn-block inplace-edit-cancel"><i class="fa fa-times"/></a>
+              </div>
+            </td>
+
+
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- New Question Panel -->
+    <div>
+      <div class="col-sm-10">
+        <input ng-model="new_question.question" placeholder="new question" class="form-control"/>
+      </div>
+      <div class="col-sm-2">
+        <button ng-click="add_question()" class="btn btn-success btn-block">
+          <i class="fa fa-plus"/> add question
+        </button>
+      </div>
+    </div>
+
+  </div>
 
 </div>

@@ -1,6 +1,7 @@
 angular.module("case-ui.question-sets", [
   "restangular"
   "ui.router"
+  "ui.sortable"
 ])
 
 
@@ -51,8 +52,22 @@ angular.module("case-ui.question-sets", [
 
 
 .controller "EditQuestionSetCtrl",
-  ($scope, $rootScope, $state, question_set)->
+  ($scope, $rootScope, $state, question_set, Restangular)->
     $scope.question_set = question_set
+
+    $scope.new_question = {}
+
+    $scope.sortable_options = {
+      axis: 'y'
+      handle: ".handle"
+      stop: ()->
+        reorder_req = { questions_attributes: [] }
+        for q, i in $scope.question_set.questions
+          q.order = i
+          reorder_req. questions_attributes.push { id: q.id, order: i }
+        $scope.question_set.customPUT(reorder_req)
+    }
+
     $scope.save = ()->
       $scope.question_set.put().then(
         (ok)->
@@ -61,4 +76,31 @@ angular.module("case-ui.question-sets", [
         ,(err)->
 
       )
+
+    $scope.add_question = ()->
+      $scope.new_question.order = $scope.question_set.questions.length
+      $scope.question_set.all("questions").post($scope.new_question)
+      .then(
+        (resp)->
+          $scope.question_set.questions.push(resp)
+        ,(err)->
+          #TODO
+          console.log err
+      )
+      $scope.new_question = {}
+
+
+    $scope.remove_question = (question)->
+      message = "Are you sure you want to delete the question?\n"
+      message += "All associated responses will be lost!"
+
+      if window.confirm(message)
+        question.remove().then(
+          (ok)->
+            _.remove($scope.question_set.questions, (q)-> q == question )
+        )
+
+
+.controller "QuestionCtrl", ($scope)->
+
 

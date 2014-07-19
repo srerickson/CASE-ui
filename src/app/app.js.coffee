@@ -121,6 +121,8 @@ angular.module("case-ui", [
     $scope.$on 'event:auth-loginRequired', (e, data)->
       currentUser.login_prompt()
 
+    $scope.current_user = currentUser
+
     # force login
     currentUser.get().then(
       (resp)->
