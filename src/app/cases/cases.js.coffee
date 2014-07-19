@@ -1,5 +1,4 @@
 angular.module("case-ui.cases", [
-  "case-ui.fields"
   "case-ui.globals"
   "case-ui.current-user"
   "ui.router"
@@ -27,8 +26,6 @@ angular.module("case-ui.cases", [
           )
       ]
 
-
-
   $stateProvider.state "new_case",
     parent: "root"
     url: "/cases/new"
@@ -44,8 +41,14 @@ angular.module("case-ui.cases", [
     data:
       pageTitle: "Editing Case"
     resolve:
-      kase: ["Restangular", "$stateParams", (Restangular, $stateParams)->
-        Restangular.one('cases', $stateParams.case_id ).get()
+      kase: ["caseFactory", "$stateParams", "current_schema_id",
+        (caseFactory, $stateParams, current_schema_id)->
+          caseFactory($stateParams.case_id).then(
+            (kase)->
+              kase.load_field_values(current_schema_id)
+            (null_kase)->
+              null_kase
+          )
       ]
       schema: ["current_schema_id","Restangular",
         (current_schema_id,Restangular)->
@@ -56,6 +59,40 @@ angular.module("case-ui.cases", [
               null
           )
       ]
+
+
+
+.factory "caseFactory", (Restangular)->
+  (case_id)->
+    _this = {}
+    _this.kase = null
+    _this.field_values = {} #lookup table
+
+    _this.load_field_values = (schema_id)->
+      if _this.kase and schema_id
+        _this.kase.all("field_values").getList({schema_id: schema_id}).then(
+          (values)->
+            _this.field_values = {} # reset lookup table
+            for value in values
+              _this.field_values[value.field_definition_id] ||= []
+              _this.field_values[value.field_definition_id].push(value)
+            _this
+          ,(err)->
+            console.log err
+            _this
+        )
+      else
+        _this
+
+    # return promise
+    Restangular.one("cases", case_id).get().then(
+      (resp)->
+        _this.kase = resp
+        _this
+      ,(err)->
+        _this
+    )
+
 
 
 .controller "CaseListCtrl",
@@ -81,28 +118,8 @@ angular.module("case-ui.cases", [
 
 
 .controller "EditCaseCtrl", ($scope, Restangular, kase, schema)->
-    
   $scope.kase = kase
   $scope.current_schema = schema
-  $scope.field_values = []
-
-  if kase and schema
-    Restangular.one("cases", kase.id)
-      .getList('field_values',{schema_id: schema.id})
-      .then (resp)->
-        $scope.field_values = resp
-
-  $scope.value_for = (field)->
-    if field
-      return _.find $scope.field_values, (v)->
-        v.field_definition_id == field.id
-
-  $scope.submit = ->
-    $scope.kase.put()
-
-  $scope.refresh = ->
-    $scope.kase.get().then (resp)->
-      $scope.kase = resp
 
 
 
@@ -110,4 +127,59 @@ angular.module("case-ui.cases", [
 #
 .controller "NewCaseCtrl", ($scope, kase)->
   $scope.kase = {}
+
+
+
+.controller "FieldCtrl", ($scope, Restangular)->
+
+  $scope.init_field = (fd)->
+    $scope.field_definition = fd
+
+    # if there is no value for the field,
+    # create a blank one
+    fv_bucket = $scope.kase.field_values[fd.id]
+    if !(fv_bucket and fv_bucket.length)
+      fv = Restangular.restangularizeElement(
+        $scope.kase.kase,
+        {
+          field_definition_id: fd.id
+          value: null
+        }, 'field_values'
+      )
+      $scope.kase.field_values[fd.id] ||= []
+      $scope.kase.field_values[fd.id].push(fv)
+
+    # TODO: handle multiple values?
+    $scope.field_values = $scope.kase.field_values[fd.id]
+
+
+  ##
+  # Returns path to field value's render/form html template
+  #
+  $scope.template_path = (styles = [])->
+    if $scope.field_definition
+      base_path =  "cases/field_templates/"
+      type = ""
+      if $scope.field_definition.type == "SelectField"
+        type = "select"
+      else if $scope.field_definition.type == "TextField"
+        type = "text"
+
+      #FIXME - short only used on forms
+      if "form" in styles
+        if $scope.field_definition.value_options.short
+          styles.push("short")
+
+      if styles.length
+        tpl = "#{base_path}_#{type}_#{(styles).join('_')}.tpl.html"
+      else
+        tpl = "#{base_path}_#{type}.tpl.html"
+      tpl
+
+
+  $scope.select_lookup = (value)->
+    if value and $scope.field_definition
+      return _.find($scope.field_definition.value_options.select, (opt)->
+        opt.id == value.value
+      )
 

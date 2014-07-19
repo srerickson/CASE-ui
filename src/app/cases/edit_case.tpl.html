@@ -55,12 +55,13 @@
       <div  class="row field" 
             ng-repeat="_fd in field_set.field_definitions" 
             ng-controller="FieldCtrl"
-            ng-init="init_field_value(_fd)"
-            inplace-edit ng-model="field_value">
+            ng-init="init_field(_fd)"
+            inplace-edit ng-model="field_values[0]">
 
 
         <div class="col-sm-2 field_name">
           {{field_definition.name }}
+          <i class="fa fa-exclamation-circle" ng-show="kase.field_values[_fd.id] !=  field_values"/>
         </div>
 
         <div class="col-sm-9">

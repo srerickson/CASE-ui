@@ -36,12 +36,17 @@
           <tr ng-repeat="q in question_set.questions"
               ng-controller="QuestionCtrl"
               ng-init="question = q"
-              inplace-edit ng-model="q">
+              inplace-edit ng-model="question_set.questions[$index]">
 
             <!-- List Order -->
             <td class="handle">
               <span class="inplace-edit-show">
                 {{question.order}}
+
+                <!-- debug out of sync inplace-edit --> 
+                <i class="fa fa-exclamation-circle text-danger" ng-show="question !=  question_set.questions[$index]"/>
+                <i class="fa fa-exclamation-circle text-warning" ng-show="question !=  q"/>
+
               </span>
               <span class="inplace-edit-form">
                 <i class="fa fa-reorder"/>
@@ -91,7 +96,7 @@
             <!-- Action Buttons -->
             <td>
               <div class="inplace-edit-show">
-                <a href class="btn btn-xs btn-primary btn-block inplace-edit-save"><i class="fa fa-pencil"/></a>
+                <a href class="btn btn-xs btn-primary btn-block inplace-edit-toggle"><i class="fa fa-pencil"/></a>
                 <a href class="btn btn-xs btn-danger btn-block" ng-click="remove_question(question)"><i class="fa fa-trash-o"/></a>
 
               </div>

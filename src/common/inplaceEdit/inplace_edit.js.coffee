@@ -27,8 +27,11 @@ angular.module("inplaceEdit", ['restangular'])
           save_method = scope.resource.post
 
         save_method().then(
-          ()->
-            scope.resource.get().then (resp)-> scope.resource = resp
+          (resp)->
+            if resp.id  # response includes object
+              scope.resource = resp
+            else        # refresh object
+              scope.resource.get().then (resp)-> scope.resource = resp
             element.toggleClass('editting')
             element.find('.inplace-edit-show')
               .addClass('flash')

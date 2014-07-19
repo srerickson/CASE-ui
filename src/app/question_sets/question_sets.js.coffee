@@ -102,5 +102,6 @@ angular.module("case-ui.question-sets", [
 
 
 .controller "QuestionCtrl", ($scope)->
+  $scope.question ||= {}
 
 
