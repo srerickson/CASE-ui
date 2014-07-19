@@ -45,7 +45,7 @@ angular.module("case-ui.cases", [
         (caseFactory, $stateParams, current_schema_id)->
           caseFactory($stateParams.case_id).then(
             (kase)->
-              kase.load_field_values(current_schema_id)
+              kase.get_field_values(current_schema_id)
             (null_kase)->
               null_kase
           )
@@ -68,7 +68,16 @@ angular.module("case-ui.cases", [
     _this.kase = null
     _this.field_values = {} #lookup table
 
-    _this.load_field_values = (schema_id)->
+    _this.get = ->
+      Restangular.one("cases", case_id).get().then(
+        (resp)->
+          _this.kase = resp
+          _this
+        ,(err)->
+          _this
+      )
+
+    _this.get_field_values = (schema_id)->
       if _this.kase and schema_id
         _this.kase.all("field_values").getList({schema_id: schema_id}).then(
           (values)->
@@ -85,13 +94,8 @@ angular.module("case-ui.cases", [
         _this
 
     # return promise
-    Restangular.one("cases", case_id).get().then(
-      (resp)->
-        _this.kase = resp
-        _this
-      ,(err)->
-        _this
-    )
+    _this.get()
+
 
 
 
@@ -117,9 +121,24 @@ angular.module("case-ui.cases", [
 
 
 
-.controller "EditCaseCtrl", ($scope, Restangular, kase, schema)->
-  $scope.kase = kase
+
+.controller "EditCaseCtrl", ($scope, kase, schema)->
+  $scope.kase = kase # the service
   $scope.current_schema = schema
+
+  $scope.upload_options = {
+    url: "#{$scope.current_user.server()}/cases/#{kase.kase.id}/uploads"
+    headers: {
+      "Authorization": $scope.current_user.token()
+    }
+    add:(e, data)->
+      data.submit()
+
+    done: (e,data)->
+      kase.get()
+  }
+
+
 
 
 
@@ -127,6 +146,8 @@ angular.module("case-ui.cases", [
 #
 .controller "NewCaseCtrl", ($scope, kase)->
   $scope.kase = {}
+
+
 
 
 

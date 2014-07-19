@@ -1,46 +1,86 @@
 <div class="edit_case case">
 
-  <div class="row" inplace-edit ng-model="kase">
+  <div inplace-edit ng-model="kase.kase" class="panel panel-info">
 
-    <div class="col-sm-12 inplace-edit-form">
+    <div class="panel-heading">
+      <div class="col-sm-10">
+        <div class="inplace-edit-form">
+          <input ng-model="kase.kase.name" type="text" class="form-control" />
+        </div>
+        <div class="inplace-edit-show">
+          <h4 class="case_name">{{kase.kase.name}}</h4>
+        </div>
+      </div>
 
-      <form role="form">
-        <div class="col-sm-2">
-          <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq100)}}" />
-        </div>
-        <div class="col-sm-9">
-          <div class="form-group">
-            <input ng-model="kase.name" type="text" class="form-control" />
-          </div>
-          <div class="form-group">
-            <textarea ng-model="kase.description" placeholder="description" class="form-control" />
-          </div>
-        </div>
-        <div class="col-sm-1">
-          <div class="form-group">
-            <a href class="btn btn-primary inplace-edit-save">Save</a>
-            <a href class="btn btn-warning inplace-edit-cancel">Cancel</a>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="col-sm-12 inplace-edit-show">
+      <!-- Edit/Save/Cancel Buttons -->
       <div class="col-sm-2">
-        <img class="img-thumbnail" ng-show="kase._image_urls.sq60" ng-src="{{$parent.asset_url(kase._image_urls.sq100)}}">
+        <div class="inplace-edit-form">
+          <a href class="btn btn-sm btn-primary inplace-edit-save pull-right" alt="save changes">
+            <i class="fa fa-check"/>
+          </a>
+          <a href class="btn btn-sm btn-warning inplace-edit-cancel pull-right" alt="cancel changes">
+            <i class="fa fa-times"/>
+          </a>
+        </div>
+        <div class="inplace-edit-show">
+          <a href class="btn btn-primary inplace-edit-toggle pull-right">
+            <i class="fa fa-pencil"/>
+          </a>
+        </div>
       </div>
-      <div class="col-sm-9">
-        <h4 class="case_name">
-          {{kase.name}}
-        </h4>
-        {{kase.description}}
-      </div>
-      <div class="col-sm-1">
-        <a href class="inplace-edit-toggle">edit</a>
-      </div>
+
+      <div class="clearfix"/>
+
     </div>
 
-  </div>
 
+    <div class="panel-body">
+
+      <div class="inplace-edit-form">
+
+        <!-- Form for image upload - separate becase it uses formdata -->
+        <div class="col-sm-1">
+          <form method="POST" enctype="multipart/form-data" 
+                data-file-upload="upload_options">
+            <div class="img-thumbnail" style="position:relative;height:60px; width:100%;padding-top:40%;text-align:center;font-size:9px" ng-show="!kase.kase._image_urls.sq60">
+              no image
+            </div>
+            <img class="img-thumbnail" ng-show="kase.kase._image_urls.sq100" ng-src="{{$parent.asset_url(kase.kase._image_urls.sq100)}}" />
+            <span class="btn btn-xs btn-primary btn-file btn-block">
+              <i class='fa fa-upload'/> image <input type="file" name="case_image"></input>
+            </span>
+          </form>
+        </div>
+        <!-- Form for Name / Description -->
+        <div class="col-sm-10">
+          <div class="form-group">
+            <textarea ng-model="kase.kase.description" placeholder="description" class="form-control" />
+            <p class="help-block">
+              This descriptions is global -- not schema-specific.
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="inplace-edit-show">
+        <div class="col-sm-2">
+          <img class="img-thumbnail" ng-show="kase.kase._image_urls.sq100" ng-src="{{$parent.asset_url(kase.kase._image_urls.sq100)}}" />
+        </div>
+        <div class="col-sm-10">
+          {{kase.kase.description}}
+        </div>
+      </div>
+
+
+    </div> <!-- panel body -->
+
+  </div> <!-- panel -->
+
+
+
+
+  <!-- Schema Case Data -->
 
   <div ng-repeat="field_set in current_schema.field_sets" class="panel panel-info field_set">
     <div class="panel-heading">

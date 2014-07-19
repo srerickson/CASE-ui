@@ -30,6 +30,9 @@ angular.module("case-ui.current-user", [
       if this.user and this.user.configs
         this.user.configs.default_schema_id
 
+    currentUser.token = ->
+      $window.sessionStorage.token
+
     currentUser.logged_in = ->
       !!$window.sessionStorage.token
 

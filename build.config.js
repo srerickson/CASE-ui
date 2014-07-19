@@ -77,6 +77,7 @@ module.exports = {
       'vendor/lodash/dist/lodash.js',
       'vendor/restangular/dist/restangular.js',
       'vendor/blueimp-file-upload/js/jquery.fileupload.js',
+      'vendor/blueimp-file-upload/js/jquery.fileupload-process.js',
       'vendor/blueimp-file-upload/js/jquery.fileupload-angular.js',
       'vendor/angular-http-auth/src/http-auth-interceptor.js',
       'vendor/angular-loading-bar/build/loading-bar.min.js',
