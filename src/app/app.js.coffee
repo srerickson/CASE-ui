@@ -25,7 +25,12 @@ angular.module("case-ui", [
     url: '?current_schema_id&current_set_id'
     views:
       '':
-        template: '<ui-view/>'
+        templateUrl: 'root/root.tpl.html'
+        controller: [ "current_schema_id", "current_set_id", "$scope"
+          (current_schema_id, current_set_id, $scope)->
+            $scope.current_schema_id = current_schema_id
+            $scope.current_set_id = current_set_id
+        ]
       'user-config':
         templateUrl: 'user_config/user.tpl.html'
         controller: 'UserConfigCtrl'
