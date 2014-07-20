@@ -10,8 +10,7 @@
           <!-- Image -->
           <div class="col-sm-1">
             <div class="inplace-edit-form">
-              <form method="POST" enctype="multipart/form-data" 
-                    data-file-upload="upload_options">
+              <form data-file-upload="upload_options">
                 <div class="img-thumbnail" style="position:relative;height:60px; width:100%;padding-top:40%;text-align:center;font-size:9px" ng-show="!kase.kase._image_urls.sq60">
                   no image
                 </div>
@@ -130,18 +129,23 @@
 
 
     <!-- Case Uploads -->
-    <div class="col-sm-2 case_uploads" 
-         ng-show="kase.kase.uploads.length">
+    <div class="col-sm-2" id="case_uploads">
       <div class="panel panel-default">
+
         <div class="panel-heading">
           Attached Files
         </div>
-        <div class="pane-body">
-          <div ng-repeat="f in kase.kase.uploads">
-            <i class="fa fa-file"/> 
-            <a ng-href="{{f._urls.original}}"> {{f.filename}} </a>
-          </div>
-          <!-- upload button todo -->
+        <div class="panel-body">
+          <form data-file-upload="upload_options">
+            <div ng-repeat="f in kase.kase.uploads">
+              <i class="fa fa-file"/> 
+              <a ng-href="{{asset_url(f._urls.original)}}"> {{f.filename}} </a>
+            </div>
+            <span class="btn btn-xs btn-primary btn-file btn-block">
+              <i class='fa fa-upload'/> upload 
+              <input type="file" multiple name="file"></input>
+            </span>
+          </form>
         </div>
       </div>
     </div>

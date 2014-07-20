@@ -128,6 +128,8 @@ angular.module("case-ui.cases", [
 
   $scope.upload_options = {
     url: "#{$scope.current_user.server()}/cases/#{kase.kase.id}/uploads"
+    type: "POST"
+    dropZone: $("#case_uploads")
     headers: {
       "Authorization": $scope.current_user.token()
     }
