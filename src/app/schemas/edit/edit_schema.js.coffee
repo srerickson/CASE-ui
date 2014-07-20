@@ -1,6 +1,5 @@
 angular.module("case-ui.schemas.edit",[
   "case-ui.schemas.edit.field_set"
-  "case-ui.basic-fields"
   'ui.bootstrap'
   "ui.router"
   "ui.sortable"
