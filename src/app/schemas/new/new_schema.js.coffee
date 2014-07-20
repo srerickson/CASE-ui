@@ -10,7 +10,7 @@ angular.module("case-ui.schemas.new",[
     parent: "root"
     url: "/schemas/new"
     controller: "NewSchemaCtrl"
-    templateUrl: "schemas/new/form.tpl.html"
+    templateUrl: "schemas/new/new_schema.tpl.html"
     data:
       pageTitle: "New Schema"
 
@@ -19,10 +19,10 @@ angular.module("case-ui.schemas.new",[
 
 .controller "NewSchemaCtrl", ($scope, $state, Restangular)->
   $scope.schema = {}
-  $scope.submit = ()->
+  $scope.save = ()->
     Restangular.all('schemas').post($scope.schema).then(
       (resp)->
-        $state.go('schemas')
+        $state.go('edit_schema',{schema_id: resp.id})
       ,(err)->
         console.log err
     )

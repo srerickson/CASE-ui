@@ -26,8 +26,8 @@
 
   </div>
   <div class="panel-body" ui-view="form">
-    <form role="form" class="form-horizontal">
-      <div basic-fields="schema"></div>
+    <form role="form">
+      <div ng-include=" 'schemas/_basic_fields.tpl.html' "></div>
       <div class="col-sm-12">
         <div class="pull-right">
           <button ng-click="save()"  class="btn btn-default">Save</button>
