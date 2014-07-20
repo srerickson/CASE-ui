@@ -1,26 +1,15 @@
-.case .panel.field_set {
-
-  .panel-heading {}
-
-  .panel-body {
-
-    .row.field {
-      padding-top:5px;
-      padding-bottom:5px;
-      border-bottom: 1px solid lightgray;
-
-      .field_name {
-        font-size:0.8em;
-        font-weight: bold;
+.edit_case {
+  .field_set {
+    table {
+      .inplace-edit-show .inplace-edit-toggle {
+        opacity: 0;
       }
 
-      .field_value{
-        font-size:0.9em;
+      tr:hover {
+        .inplace-edit-show .inplace-edit-toggle {
+          opacity: 1;
+        }
       }
-
-
     }
-
   }
-
 }

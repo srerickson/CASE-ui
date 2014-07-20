@@ -1,140 +1,153 @@
 <div class="edit_case case">
 
-  <div inplace-edit ng-model="kase.kase" class="panel panel-info">
+  <div class="row">
 
-    <div class="panel-heading">
-      <div class="col-sm-10">
-        <div class="inplace-edit-form">
-          <input ng-model="kase.kase.name" type="text" class="form-control" />
-        </div>
-        <div class="inplace-edit-show">
-          <h4 class="case_name">{{kase.kase.name}}</h4>
-        </div>
-      </div>
+    <!-- Basic Case Info Panel -->
+    <div class="col-sm-12">
+      <div inplace-edit ng-model="kase.kase" class="panel panel-default">
+        <div class="panel-body">
 
-      <!-- Edit/Save/Cancel Buttons -->
-      <div class="col-sm-2">
-        <div class="inplace-edit-form">
-          <a href class="btn btn-sm btn-primary inplace-edit-save pull-right" alt="save changes">
-            <i class="fa fa-check"/>
-          </a>
-          <a href class="btn btn-sm btn-warning inplace-edit-cancel pull-right" alt="cancel changes">
-            <i class="fa fa-times"/>
-          </a>
-        </div>
-        <div class="inplace-edit-show">
-          <a href class="btn btn-primary inplace-edit-toggle pull-right">
-            <i class="fa fa-pencil"/>
-          </a>
-        </div>
-      </div>
-
-      <div class="clearfix"/>
-
-    </div>
-
-
-    <div class="panel-body">
-
-      <div class="inplace-edit-form">
-
-        <!-- Form for image upload - separate becase it uses formdata -->
-        <div class="col-sm-1">
-          <form method="POST" enctype="multipart/form-data" 
-                data-file-upload="upload_options">
-            <div class="img-thumbnail" style="position:relative;height:60px; width:100%;padding-top:40%;text-align:center;font-size:9px" ng-show="!kase.kase._image_urls.sq60">
-              no image
-            </div>
-            <img class="img-thumbnail" ng-show="kase.kase._image_urls.sq100" ng-src="{{$parent.asset_url(kase.kase._image_urls.sq100)}}" />
-            <span class="btn btn-xs btn-primary btn-file btn-block">
-              <i class='fa fa-upload'/> image <input type="file" name="case_image"></input>
-            </span>
-          </form>
-        </div>
-        <!-- Form for Name / Description -->
-        <div class="col-sm-10">
-          <div class="form-group">
-            <textarea ng-model="kase.kase.description" placeholder="description" class="form-control" />
-            <p class="help-block">
-              This descriptions is global -- not schema-specific.
-            </p>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="inplace-edit-show">
-        <div class="col-sm-2">
-          <img class="img-thumbnail" ng-show="kase.kase._image_urls.sq100" ng-src="{{$parent.asset_url(kase.kase._image_urls.sq100)}}" />
-        </div>
-        <div class="col-sm-10">
-          {{kase.kase.description}}
-        </div>
-      </div>
-
-
-    </div> <!-- panel body -->
-
-  </div> <!-- panel -->
-
-
-
-
-  <!-- Schema Case Data -->
-
-  <div ng-repeat="field_set in current_schema.field_sets" class="panel panel-info field_set">
-    <div class="panel-heading">
-      {{field_set.name}}
-
-      <a href ng-show="current_user.id() == current_schema.user.id"
-         ui-sref="edit_schema.edit_field_set({schema_id:current_schema.id, field_set_id: field_set.id})"><i class="fa fa-edit"/></a>
-
-    </div>
-    <div class="panel-body">
-
-      <div  class="row field" 
-            ng-repeat="_fd in field_set.field_definitions" 
-            ng-controller="FieldCtrl"
-            ng-init="init_field(_fd)"
-            inplace-edit ng-model="field_values[0]">
-
-
-        <div class="col-sm-2 field_name">
-          {{field_definition.name }}
-          <i class="fa fa-exclamation-circle" ng-show="kase.field_values[_fd.id] !=  field_values"/>
-        </div>
-
-        <div class="col-sm-9">
-          <div class="field_value" >
+          <!-- Image -->
+          <div class="col-sm-1">
             <div class="inplace-edit-form">
-              <form name="field_value_form">
-                <div ng-include=' template_path(["form"]) '></div>
-                <a href class="btn btn-success inplace-edit-save">
-                  save
-                </a>
+              <form method="POST" enctype="multipart/form-data" 
+                    data-file-upload="upload_options">
+                <div class="img-thumbnail" style="position:relative;height:60px; width:100%;padding-top:40%;text-align:center;font-size:9px" ng-show="!kase.kase._image_urls.sq60">
+                  no image
+                </div>
+                <img class="img-thumbnail" ng-show="kase.kase._image_urls.sq100" ng-src="{{$parent.asset_url(kase.kase._image_urls.sq100)}}" />
+                <span class="btn btn-xs btn-primary btn-file btn-block">
+                  <i class='fa fa-upload'/> image 
+                  <input type="file" name="case_image"></input>
+                </span>
               </form>
             </div>
-            <div class="inplace-edit-show" ng-include=' template_path() '>
-              <div ng-include=' template_path() '></div>
+            <div class="inplace-edit-show">
+              <img class="img-thumbnail" ng-show="kase.kase._image_urls.sq100" ng-src="{{$parent.asset_url(kase.kase._image_urls.sq100)}}" />
             </div>
           </div>
-        </div>
 
-        <div class="col-sm-1">
-          <div class="inplace-edit-form">
-            <a href class="inplace-edit-cancel">
-              <i class="fa fa-times"></i> 
-            </a>
-          </div> 
-          <div class="inplace-edit-show">
-            <a href class="inplace-edit-toggle">
-              <i class="fa fa-pencil"/>
-            </a>
+          <!-- Case Name/Description -->
+          <div class="col-sm-8">
+            <div class="inplace-edit-form">
+              <div class="form-group">          
+                <input ng-model="kase.kase.name" type="text" class="form-control" />
+              </div>
+              <div class="form-group">
+                <textarea ng-model="kase.kase.description" placeholder="description" class="form-control" />
+                <p class="help-block">
+                  This descriptions is global -- not schema-specific.
+                </p>
+              </div>
+            </div>
+            <div class="inplace-edit-show">
+              <h3 class="case_name">{{kase.kase.name}}</h3>
+              {{kase.kase.description}}
+            </div>
           </div>
+
+
+          <!-- Edit/Save/Cancel Buttons -->
+          <div class="col-sm-2">
+            <div class="inplace-edit-form">
+              <a href class="btn btn-sm btn-primary inplace-edit-save pull-right" alt="save changes">
+                <i class="fa fa-check"/>
+              </a>
+              <a href class="btn btn-sm btn-warning inplace-edit-cancel pull-right" alt="cancel changes">
+                <i class="fa fa-times"/>
+              </a>
+            </div>
+            <div class="inplace-edit-show">
+              <a href class="btn btn-primary inplace-edit-toggle pull-right">
+                <i class="fa fa-pencil"/>
+              </a>
+            </div>
+          </div>
+
+        </div> <!-- panel body -->
+      </div> <!-- panel -->
+    </div> <!-- col-12 -->
+  </div> <!-- row -->
+
+  <div class="row">
+
+    <!-- Schema Case Data -->
+    <div class="col-sm-10">
+      <div ng-repeat="field_set in current_schema.field_sets" class="panel panel-default field_set">
+        <div class="panel-heading">
+          {{field_set.name}}
+          <a href ng-show="current_user.id() == current_schema.user.id"
+             ui-sref="edit_schema.edit_field_set({schema_id:current_schema.id, field_set_id: field_set.id})"><i class="fa fa-edit"/></a>
         </div>
 
+        <div class="panel-body">
 
+          <table class="table table-hover">
+            <tbody>
+
+              <tr class="field" 
+                ng-repeat="_fd in field_set.field_definitions" 
+                ng-controller="FieldCtrl"
+                ng-init="init_field(_fd)"
+                inplace-edit ng-model="field_values[0]">
+                <form role="form" name="field_value">
+                  <th class="field_name">
+                    {{field_definition.name }}
+                    <i class="fa fa-exclamation-circle" ng-show="kase.field_values[_fd.id] !=  field_values"/>
+                  </th>
+                  <td class="field_value">
+                    <div class="inplace-edit-form">
+                      <div ng-include=' template_path(["form"]) '></div>
+                    </div>
+                    <div class="inplace-edit-show" ng-include=' template_path() '>
+                      <div ng-include=' template_path() '></div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="inplace-edit-form">
+                      <a href class="inplace-edit-save">
+                        <i class="fa fa-check"></i> 
+                      </a>
+                      <a href class="inplace-edit-cancel">
+                        <i class="fa fa-times"></i> 
+                      </a>
+                    </div> 
+                    <div class="inplace-edit-show">
+                      <a href class="inplace-edit-toggle">
+                        <i class="fa fa-pencil"/>
+                      </a>
+                    </div>
+                  </td>
+                </form>
+              </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+      </div>
+    </div> <!-- Schema Case Data -->
+
+
+    <!-- Case Uploads -->
+    <div class="col-sm-2 case_uploads" 
+         ng-show="kase.kase.uploads.length">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Attached Files
+        </div>
+        <div class="pane-body">
+          <div ng-repeat="f in kase.kase.uploads">
+            <i class="fa fa-file"/> 
+            <a ng-href="{{f._urls.original}}"> {{f.filename}} </a>
+          </div>
+          <!-- upload button todo -->
+        </div>
       </div>
     </div>
   </div>
+
+
+
+
 </div>
