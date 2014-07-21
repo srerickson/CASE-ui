@@ -14,7 +14,8 @@
     "angular-http-auth": "~1.2.1",
     "angular-loading-bar": "~0.4.3",
     "jquery-ui": "~1.11.0",
-    "d3": "~3.4.9"
+    "d3": "~3.4.9",
+    "angular-ui-select": "~0.4.0"
   },
   "dependencies": {}
 }

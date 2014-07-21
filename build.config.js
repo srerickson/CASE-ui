@@ -81,7 +81,8 @@ module.exports = {
       'vendor/blueimp-file-upload/js/jquery.fileupload-angular.js',
       'vendor/angular-http-auth/src/http-auth-interceptor.js',
       'vendor/angular-loading-bar/build/loading-bar.min.js',
-      'vendor/d3/d3.min.js'
+      'vendor/d3/d3.min.js',
+      'vendor/angular-ui-select/dist/select.min.js'
 
     ],
     css: [

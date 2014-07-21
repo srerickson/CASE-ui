@@ -2,6 +2,7 @@ angular.module("case-ui.evaluations", [
   "case-ui.evaluation-set"
   "case-ui.evaluation-vis"
   "ui.router"
+  "ui.select"
   "ui.bootstrap"
   "restangular"
 ])
@@ -60,6 +61,14 @@ angular.module("case-ui.evaluations", [
           evaluation_set.refresh_response_for(k,q,response_request_params)
       )
 
+    $scope.new_evaluation = ()->
+      $modal.open(
+        controller: "NewEvaluationPopup"
+        templateUrl: "evaluations/new_response_modal.tpl.html"
+        resolve:
+          evaluation_set: ()-> $scope.evaluation_set.evaluation_set
+      )
+
 
 .controller "EvaluationResponsePopupCtrl",
   ($scope, $modalInstance, evaluation_set, kase, question, all_responses)->
@@ -85,4 +94,8 @@ angular.module("case-ui.evaluations", [
       response.get().then (resp)->
         response = resp
 
+
+.controller "NewEvaluationPopup",
+  ($scope,$modalInstance,evaluation_set)->
+    $scope.evaluation_response = {}
 

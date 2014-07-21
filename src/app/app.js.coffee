@@ -12,6 +12,7 @@ angular.module("case-ui", [
   "ui.router"
   "restangular"
   "ui.bootstrap"
+  "ui.select"
   "inplaceEdit"
   "angular-loading-bar"
 ])
@@ -75,6 +76,11 @@ angular.module("case-ui", [
     extractedData
 
 )
+
+.config( (uiSelectConfig)->
+  uiSelectConfig.theme = 'bootstrap'
+)
+
 
 
 # additional Restangular config that need $window
