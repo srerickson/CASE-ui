@@ -29,10 +29,11 @@ angular.module("case-ui.cases", [
   $stateProvider.state "new_case",
     parent: "root"
     url: "/cases/new"
-    controller: "NewCaseListCtrl"
+    controller: "NewCaseCtrl"
     templateUrl: "cases/new_case.tpl.html"
     data:
       pageTitle: "New Case"
+
   $stateProvider.state "edit_case",
     parent: "root"
     url: "/cases/:case_id"
@@ -147,9 +148,17 @@ angular.module("case-ui.cases", [
 
 # New Case Controller
 #
-.controller "NewCaseCtrl", ($scope, kase)->
+.controller "NewCaseCtrl", ($scope, $state, Restangular)->
   $scope.kase = {}
 
+  $scope.save = ()->
+    Restangular.all('cases').post($scope.kase).then(
+      (resp)->
+        $state.go('edit_case',{case_id: resp.id})
+      (err)->
+        console.log err
+
+    )
 
 
 
