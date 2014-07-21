@@ -12,6 +12,17 @@ angular.module("inplaceEdit", ['restangular'])
       element.addClass("inplace-edit")
 
       element.find('.inplace-edit-toggle').click ()->
+
+        show_height= element.find('.inplace-edit-show.match-size')
+          .first().css('height')
+        show_width= element.find('.inplace-edit-show.match-size')
+          .first().css('width')
+
+        element.find('.inplace-edit-form.match-size')
+          .first().css('height', show_height)
+        element.find('.inplace-edit-form.match-size')
+          .first().css('width', show_width)
+
         element.toggleClass('editting')
 
       element.find('.inplace-edit-save').click ()->

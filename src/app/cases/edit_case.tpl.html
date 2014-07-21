@@ -24,10 +24,10 @@
                   <i class="fa fa-exclamation-circle" ng-show="kase.field_values[_fd.id] !=  field_values"/>
                 </th>
                 <td class="field_value">
-                  <div class="inplace-edit-form">
-                    <div ng-include=' template_path(["form"]) '></div>
+                  <div class="inplace-edit-form match-size">
+                    <div class="field_value_form" ng-include=' template_path(["form"]) '></div>
                   </div>
-                  <div class="inplace-edit-show" ng-include=' template_path() '>
+                  <div class="inplace-edit-show match-size" ng-include=' template_path() '>
                     <div ng-include=' template_path() '></div>
                   </div>
                 </td>
