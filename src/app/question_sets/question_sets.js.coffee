@@ -1,4 +1,5 @@
 angular.module("case-ui.question-sets", [
+  "case-ui.question-sets.response-options"
   "restangular"
   "ui.router"
   "ui.sortable"
@@ -39,7 +40,10 @@ angular.module("case-ui.question-sets", [
 
 .controller "NewQuestionSetCtrl",
   ($scope, $rootScope, $state, Restangular)->
-    $scope.question_set = {}
+    $scope.question_set = {
+      locked: false
+      public_responses: false
+    }
     $scope.save = ()->
       Restangular.all("evaluations/sets").post($scope.question_set).then(
         (resp)->
@@ -53,9 +57,9 @@ angular.module("case-ui.question-sets", [
 
 .controller "EditQuestionSetCtrl",
   ($scope, $rootScope, $state, question_set, Restangular)->
-    $scope.question_set = question_set
 
-    $scope.new_question = {}
+    $scope.question_set = question_set
+    $scope.new_question = {} # blank question
 
     $scope.sortable_options = {
       axis: 'y'
@@ -67,6 +71,12 @@ angular.module("case-ui.question-sets", [
           reorder_req. questions_attributes.push { id: q.id, order: i }
         $scope.question_set.customPUT(reorder_req)
     }
+
+    $scope.init_new_question = ->
+      $scope.new_question.response_options = {}
+      $scope.new_question.question = ""
+    $scope.init_new_question()
+
 
     $scope.save = ()->
       $scope.question_set.put().then(
@@ -83,11 +93,12 @@ angular.module("case-ui.question-sets", [
       .then(
         (resp)->
           $scope.question_set.questions.push(resp)
+          $scope.init_new_question()
         ,(err)->
           #TODO
           console.log err
       )
-      $scope.new_question = {}
+     
 
 
     $scope.remove_question = (question)->

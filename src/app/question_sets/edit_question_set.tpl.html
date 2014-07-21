@@ -86,10 +86,10 @@
             <!-- Response Options -->
             <td>
               <span class="inplace-edit-show">
-                {{question.response_options}}
+                {{ question.response_options | responseOptionsName }}
               </span>
               <span class="inplace-edit-form">
-                <textarea ng-model="question.response_options" class="form-control"/>
+                <div response-options-select="question.response_options"/>
               </span>
             </td>
 
@@ -116,8 +116,11 @@
 
     <!-- New Question Panel -->
     <div>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <input ng-model="new_question.question" placeholder="new question" class="form-control"/>
+      </div>
+      <div class="col-sm-2">
+        <div response-options-select="new_question.response_options"/>
       </div>
       <div class="col-sm-2">
         <button ng-click="add_question()" class="btn btn-success btn-block">
