@@ -4,6 +4,7 @@ angular.module("case-ui.cases", [
   "ui.router"
   "restangular"
   "blueimp.fileupload"
+  "hc.marked"
 ])
 
 

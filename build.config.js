@@ -82,8 +82,9 @@ module.exports = {
       'vendor/angular-http-auth/src/http-auth-interceptor.js',
       'vendor/angular-loading-bar/build/loading-bar.min.js',
       'vendor/d3/d3.min.js',
-      'vendor/angular-ui-select/dist/select.min.js'
-
+      'vendor/angular-ui-select/dist/select.min.js',
+      'vendor/marked/lib/marked.js',
+      'vendor/angular-marked/angular-marked.min.js'
     ],
     css: [
       'vendor/angular-loading-bar/build/loading-bar.min.css',
