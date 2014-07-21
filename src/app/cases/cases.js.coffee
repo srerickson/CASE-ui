@@ -113,8 +113,9 @@ angular.module("case-ui.cases", [
         $scope.cases = resp
     else if $stateParams.case_filter == 'schema'
       if schema
-        schema.all('cases').getList().then (resp)->
-          $scope.cases = resp
+        Restangular.all('cases').getList({schema_id: schema.id})
+          .then (resp)->
+            $scope.cases = resp
 
     $scope.go = (id)->
       $state.go('edit_case',{case_id: id})
