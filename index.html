@@ -45,20 +45,13 @@
               </a>
             </li>
             <li>
-              <a href="#" ui-sref="evaluations">
+              <a href="#" ui-sref="evaluations({all_responses: '0'})">
                 <i class="fa fa-sliders"></i>
                Evaluations
               </a>
             </li>
-            <li ui-sref-active="active">
-              <a href ui-sref="schemas">
-                <i class="fa fa-sitemap"></i>
-                Schemas
-              </a>
-            </li>
           </ul>
-          <div ui-view="user-config"></div>
-
+          <div ui-view="user-config" ></div>
         </div>
       </div>
     </div>
