@@ -96,6 +96,60 @@ angular.module("case-ui.evaluations", [
 
 
 .controller "NewEvaluationPopup",
-  ($scope,$modalInstance,evaluation_set)->
+  ($scope,$modalInstance,evaluation_set, Restangular)->
+
+    $scope.evaluation_set = evaluation_set
     $scope.evaluation_response = {}
+    $scope.selected_question = {}
+    $scope.cases = []
+
+    Restangular.all('cases').getList().then (resp)->
+      $scope.cases = resp
+
+    $scope.$watch "evaluation_response.question_id", (newQid)->
+      if newQid
+        $scope.selected_question = _.find($scope.evaluation_set.questions,
+          (q)-> parseInt(newQid) == parseInt(q.id)
+        )
+
+    # we can't just grab the case id w/ ui-select, so
+    # the selected case is stored as an attribute that
+    # is deleted before POSTing.
+    # (this will change soon, probably, track this issue
+    # here: https://github.com/angular-ui/ui-select/pull/107 )
+    # Watch that attribute and set case_id
+    $scope.$watch 'evaluation_response.case', (newCase)->
+      if newCase
+        $scope.evaluation_response.case_id = newCase.id
+
+    $scope.selected_question_index = ()->
+      _.findIndex($scope.evaluation_set.questions, (q)->
+        q.id == parseInt($scope.evaluation_response.question_id)
+      )
+
+    $scope.next_question = ()->
+      idx = $scope.selected_question_index()
+      idx += 1
+      idx %= $scope.evaluation_set.questions.length
+      next_q = $scope.evaluation_set.questions[idx]
+      $scope.evaluation_response.question_id = next_q.id
+
+    $scope.prev_question = ()->
+      idx = $scope.selected_question_index()
+      idx = $scope.evaluation_set.questions.length if idx == 0
+      idx -= 1
+      next_q = $scope.evaluation_set.questions[idx]
+      $scope.evaluation_response.question_id = next_q.id
+
+    $scope.save_and_next = ()->
+      # make a copy and delete the case attribute
+      response = angular.copy($scope.evaluation_response)
+      delete response.case
+      evaluation_set.all('responses').post(response).then(
+        (ok)->
+          $scope.evaluation_response.answer = null
+          $scope.evaluation_response.comment = ''
+          $scope.next_question()
+      )
+
 

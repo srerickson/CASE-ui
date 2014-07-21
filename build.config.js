@@ -86,7 +86,8 @@ module.exports = {
 
     ],
     css: [
-      'vendor/angular-loading-bar/build/loading-bar.min.css'
+      'vendor/angular-loading-bar/build/loading-bar.min.css',
+      'vendor/angular-ui-select/dist/select.min.css'
     ],
     assets: [
     ]
