@@ -19,7 +19,7 @@ angular.module("case-ui", [
 
 .config( ($stateProvider, $urlRouterProvider, RestangularProvider) ->
 
-  $urlRouterProvider.otherwise ""
+  $urlRouterProvider.otherwise "/cases"
 
   $stateProvider.state "root",
     abstract: true

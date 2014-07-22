@@ -1,30 +1,67 @@
+<div class="row case_list">
 
+  <div class="col-sm-10">
 
-<div class="row" class = "case_list">
-  <div class="col-sm-8">
-    <table class="table table-hover table-striped table-bordered">
-      <tr ng-repeat="case in cases" ng-click="go(case.id)">
-        <td>
-          <img class="img-thumbnail" ng-show="case._image_urls.sq60" ng-src="{{$parent.asset_url(case._image_urls.sq60)}}">
-        </td>
-        <td>
-          <a href ui-sref="edit_case({case_id: case.id})">
-            {{case.name}}
-          </a>
-        </td>
-      </tr>
+    <!-- Case List -->
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <td colspan='2'>Case</td>
+          <td ng-repeat="q in evaluation_set.questions"
+              class="eval_question"
+              ng-class="{subquestion: q.is_subquestion}">
+            {{q.param}}
+          </td>
+        <tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="k in cases">
+          <td>
+            <a href ui-sref="edit_case({case_id: k.id})">
+              <img class="img-thumbnail" ng-show="k._image_urls.sq60" ng-src="{{$parent.asset_url(k._image_urls.sq60)}}">
+            </a>
+          </td>
+          <td>
+            <a href ui-sref="edit_case({case_id: k.id})">
+            {{k.name}}
+            </a>
+          </td>
+          <td ng-repeat="q in evaluation_set.questions"
+              ng-class="{subquestion: q.is_subquestion}"
+              class="pie_container"
+              ng-click="response_detail(k,q)">
+            <div evaluation-pie="evaluation_set.responses_lookup[k.id][q.id][0]"></div>
+
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
-  <div class="col-sm-4">
 
-    <div class="btn-group btn-group-justified">
-      <a class="btn btn-default" ui-sref-active="active" ui-sref="cases({case_filter:'all'})"> All Cases </a>
-      <a class="btn btn-default" ui-sref-active="active" ui-sref="cases({case_filter:'schema'})"> Schema Cases </a>
-    </div>
 
-    <div>
-      <button ui-sref="new_case" class="btn btn-success"><i class="fa fa-plus"> New Case</i></button>
-    </div>
+
+  <div class="col-sm-2">
+
+    <p>
+      <h5>Filter Cases</h5>
+      <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({case_filter:'all'})">All Cases</a>
+      <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({case_filter:'schema'})">Schema's Cases</a>
+      <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({case_filter:null})">Your Evaluated Cases</a>
+    </p>
+
+
+    <p>
+      <h5>Evaluation Filters</h5>
+      <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({eval_filter:'all'})">All Evaluations</a>
+      <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({eval_filter:null})">Your Evaluations</a>
+    </p>
+
+
+    <p>
+      <a class="btn btn-block btn-success" ui-sref="new_case" ><i class="fa fa-plus"> New Case</i></a>
+
+      <a class="btn btn-block btn-success" ng-click="new_evaluation()"> <i class="fa fa-plus"> New Evaluation </i> </a>
+    </p>
 
 
 

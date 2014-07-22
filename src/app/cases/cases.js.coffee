@@ -1,5 +1,6 @@
 angular.module("case-ui.cases", [
   "case-ui.globals"
+  "case-ui.evaluations"
   "case-ui.current-user"
   "ui.router"
   "restangular"
@@ -11,7 +12,7 @@ angular.module("case-ui.cases", [
 .config ($stateProvider) ->
   $stateProvider.state "cases",
     parent: "root"
-    url: "/cases?case_filter"
+    url: "/cases?case_filter&eval_filter"
     controller: "CaseListCtrl"
     templateUrl: "cases/case_list.tpl.html"
     data:
@@ -24,6 +25,15 @@ angular.module("case-ui.cases", [
               resp
             ,(err)->
               null
+          )
+      ]
+      evaluation_set: ["current_set_id","evaluationSetFactory",
+        (current_set_id, evaluationSetFactory)->
+          evaluationSetFactory(current_set_id).then(
+            (resp)->
+              return resp
+            ,(err)->
+              console.log err
           )
       ]
 
@@ -102,26 +112,49 @@ angular.module("case-ui.cases", [
 
 
 .controller "CaseListCtrl",
-  ($scope, Restangular, $state, $stateParams, schema)->
+  ($scope, Restangular, $state, $stateParams,
+  schema, evaluation_set, evaluationService)->
 
-    if !$stateParams.case_filter
-      $state.go('cases',{case_filter: 'all'})
-
+    $scope.evaluation_set = evaluation_set # a service
     $scope.schema = schema
     $scope.cases = []
+    $scope.evaluationService = evaluationService
 
-    if $stateParams.case_filter == 'all'
-      Restangular.all('cases').getList().then (resp)->
-        $scope.cases = resp
-    else if $stateParams.case_filter == 'schema'
-      if schema
-        Restangular.all('cases').getList({schema_id: schema.id})
-          .then (resp)->
-            $scope.cases = resp
+    # default params for case list
+    case_filter_params = {
+      user_evaluated: true
+      set_id: evaluation_set.evaluation_set.id
+    }
 
-    $scope.go = (id)->
-      $state.go('edit_case',{case_id: id})
+    # defautl params for evaluations
+    eval_filter_params = {
+      own: true       # only user's evals
+      aggregate:true  # aggregate responses
+    }
 
+    if $stateParams.eval_filter == 'all'
+      delete eval_filter_params.own
+
+    if $stateParams.case_filter == 'schema'
+      case_filter_params.schema_id = schema.id
+    else if $stateParams.case_filter == 'all'
+      delete case_filter_params.set_id
+      delete case_filter_params.user_evaluated
+
+    # fetch evaluation responses and cases
+    evaluation_set.refresh_responses(eval_filter_params)
+
+    Restangular.all('cases').getList(case_filter_params)
+      .then (resp)-> $scope.cases = resp
+
+    $scope.new_evaluation = ->
+      evaluationService.new_evaluation(evaluation_set)
+      .then(
+        (ok)->
+          evaluation_set.refresh_responses(eval_filter_params)
+        ,(err) ->
+          evaluation_set.refresh_responses(eval_filter_params)
+      )
 
 
 

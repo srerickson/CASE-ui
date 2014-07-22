@@ -8,66 +8,32 @@ angular.module("case-ui.evaluations", [
 ])
 
 
-.config ($stateProvider) ->
-  $stateProvider.state "evaluations",
-    parent: "root"
-    url: "/evaluations?all_responses"
-    controller: "EvaluationListCtrl"
-    templateUrl: "evaluations/evaluation_list.tpl.html"
-    data:
-      pageTitle: "Evaluation Responses"
-    resolve:
-      evaluation_set: ["current_set_id","evaluationSetFactory",
-        (current_set_id, evaluationSetFactory)->
-          evaluationSetFactory(current_set_id).then(
-            (resp)->
-              return resp
-            ,(err)->
-              console.log err
-          )
-      ]
 
 
+.factory "evaluationService", ($modal)->
 
-.controller "EvaluationListCtrl",
-  ($scope, $stateParams, evaluation_set, $modal)->
+  {
 
-    $scope.evaluation_set = evaluation_set
-
-    case_request_params = {}
-    response_request_params = {aggregate:true}
-
-    if $stateParams.all_responses != '1'
-      case_request_params.own = true
-      response_request_params.own = true
-
-    evaluation_set.refresh_cases(case_request_params)
-    evaluation_set.refresh_responses(response_request_params)
-
-    $scope.response_detail = (k,q)->
+    response_detail: (eval_set, k,q=null)->
       $modal.open({
         controller: "EvaluationResponsePopupCtrl"
         templateUrl: "evaluations/response_detail_modal.tpl.html"
         resolve:
           #pass the restangular model, not the whole evaluationSet object
-          evaluation_set: ()-> $scope.evaluation_set.evaluation_set
+          evaluation_set: ()-> evaluation_set
           kase: ()-> k
           question: ()-> q
           all_responses: ()-> $stateParams.all_responses == '1'
-      }).result.then(
-        (succ)->
-          evaluation_set.refresh_response_for(k,q,response_request_params)
-        ,(err)->
-          evaluation_set.refresh_response_for(k,q,response_request_params)
-      )
+      }).result
 
-    $scope.new_evaluation = ()->
+    new_evaluation: (eval_set_service)->
       $modal.open(
         controller: "NewEvaluationPopup"
         templateUrl: "evaluations/new_response_modal.tpl.html"
         resolve:
-          evaluation_set: ()-> $scope.evaluation_set.evaluation_set
-      )
+          evaluation_set: ()-> eval_set_service.evaluation_set
+      ).result
+  }
 
 
 .controller "EvaluationResponsePopupCtrl",
