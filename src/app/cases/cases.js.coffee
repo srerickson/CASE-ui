@@ -156,6 +156,9 @@ angular.module("case-ui.cases", [
           evaluation_set.refresh_responses(eval_filter_params)
       )
 
+    $scope.go = (id)->
+      $state.go('edit_case',{case_id: id},{reload: true})
+
 
 
 .controller "EditCaseCtrl", ($scope, kase, schema)->

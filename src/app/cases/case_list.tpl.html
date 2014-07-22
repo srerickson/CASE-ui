@@ -17,12 +17,14 @@
       <tbody>
         <tr ng-repeat="k in cases">
           <td>
-            <a href ui-sref="edit_case({case_id: k.id})">
+            <a ui-sref="edit_case({case_id: k.id})" 
+               ui-sref-opts="{reload:true}">
               <img class="img-thumbnail" ng-show="k._image_urls.sq60" ng-src="{{$parent.asset_url(k._image_urls.sq60)}}">
             </a>
           </td>
           <td>
-            <a href ui-sref="edit_case({case_id: k.id})">
+            <a ui-sref="edit_case({case_id: k.id})" 
+               ui-sref-opts="{reload:true}">
             {{k.name}}
             </a>
           </td>
