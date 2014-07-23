@@ -3,7 +3,6 @@ angular.module("case-ui", [
   "templates-common"
   "case-ui.globals"
   "case-ui.current-user"
-  "case-ui.home"
   "case-ui.schemas"
   "case-ui.cases"
   "case-ui.evaluations"
