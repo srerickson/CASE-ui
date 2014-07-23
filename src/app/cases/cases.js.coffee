@@ -17,25 +17,6 @@ angular.module("case-ui.cases", [
     templateUrl: "cases/case_list.tpl.html"
     data:
       pageTitle: "Cases"
-    resolve:
-      schema:["current_schema_id","Restangular",
-        (current_schema_id,Restangular)->
-          Restangular.one("schemas",current_schema_id).get().then(
-            (resp)->
-              resp
-            ,(err)->
-              null
-          )
-      ]
-      evaluation_set: ["current_set_id","evaluationSetFactory",
-        (current_set_id, evaluationSetFactory)->
-          evaluationSetFactory(current_set_id).then(
-            (resp)->
-              return resp
-            ,(err)->
-              console.log err
-          )
-      ]
 
   $stateProvider.state "new_case",
     parent: "root"
@@ -53,22 +34,13 @@ angular.module("case-ui.cases", [
     data:
       pageTitle: "Editing Case"
     resolve:
-      kase: ["caseFactory", "$stateParams", "current_schema_id",
-        (caseFactory, $stateParams, current_schema_id)->
+      kase: ["caseFactory", "$stateParams", "current_schema",
+        (caseFactory, $stateParams, current_schema)->
           caseFactory($stateParams.case_id).then(
             (kase)->
-              kase.get_field_values(current_schema_id)
+              kase.get_field_values(current_schema.id)
             (null_kase)->
               null_kase
-          )
-      ]
-      schema: ["current_schema_id","Restangular",
-        (current_schema_id,Restangular)->
-          Restangular.one("schemas",current_schema_id).get().then(
-            (resp)->
-              resp
-            ,(err)->
-              null
           )
       ]
 
@@ -113,17 +85,17 @@ angular.module("case-ui.cases", [
 
 .controller "CaseListCtrl",
   ($scope, Restangular, $state, $stateParams,
-  schema, evaluation_set, evaluationService)->
+  current_schema, current_question_set, evaluationService)->
 
-    $scope.evaluation_set = evaluation_set # a service
-    $scope.schema = schema
+    $scope.question_set = current_question_set # a service
+    $scope.schema = current_schema
     $scope.cases = []
     $scope.evaluationService = evaluationService
 
     # default params for case list
     case_filter_params = {
       user_evaluated: true
-      set_id: evaluation_set.evaluation_set.id
+      set_id: current_question_set.id()
     }
 
     # defautl params for evaluations
@@ -136,24 +108,24 @@ angular.module("case-ui.cases", [
       delete eval_filter_params.own
 
     if $stateParams.case_filter == 'schema'
-      case_filter_params.schema_id = schema.id
+      case_filter_params.schema_id = current_schema.id
     else if $stateParams.case_filter == 'all'
       delete case_filter_params.set_id
       delete case_filter_params.user_evaluated
 
     # fetch evaluation responses and cases
-    evaluation_set.refresh_responses(eval_filter_params)
+    current_question_set.refresh_responses(eval_filter_params)
 
     Restangular.all('cases').getList(case_filter_params)
       .then (resp)-> $scope.cases = resp
 
     $scope.new_evaluation = ->
-      evaluationService.new_evaluation(evaluation_set)
+      evaluationService.new_evaluation(current_question_set)
       .then(
         (ok)->
-          evaluation_set.refresh_responses(eval_filter_params)
+          current_question_set.refresh_responses(eval_filter_params)
         ,(err) ->
-          evaluation_set.refresh_responses(eval_filter_params)
+          current_question_set.refresh_responses(eval_filter_params)
       )
 
     $scope.go = (id)->
@@ -161,9 +133,9 @@ angular.module("case-ui.cases", [
 
 
 
-.controller "EditCaseCtrl", ($scope, kase, schema)->
+.controller "EditCaseCtrl", ($scope, kase, current_schema)->
   $scope.kase = kase # the service
-  $scope.current_schema = schema
+  $scope.current_schema = current_schema
 
   $scope.upload_options = {
     url: "#{$scope.current_user.server()}/cases/#{kase.kase.id}/uploads"

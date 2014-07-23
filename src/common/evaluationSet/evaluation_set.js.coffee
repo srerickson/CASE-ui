@@ -9,31 +9,11 @@ angular.module("case-ui.evaluation-set", [
 
     state.evaluation_set = null
 
-    state.cases       = [] # evaluated cases
     state.questions   = [] # eval set's questions
     state.responses_lookup = [] # 2D lookup matrix for responses
 
-    ##
-    # Case loading functions
-    ##
-    state.cases_promise = null
-    state.load_cases = (params = {})->
-      if !state.cases_promise
-        if state.evaluation_set
-          state.cases_promise = state.evaluation_set.all("cases")
-                                                    .getList(params)
-          state.cases_promise.then (resp)->
-            state.cases = resp
-        else
-          state.cases_promise = null
-      else
-        state.cases_promise
-
-    state.refresh_cases = (params = {})->
-      state.cases_promise = null
-      state.load_cases(params)
-
-
+    state.id = ->
+      state.evaluation_set.id
 
     store_response = (r)->
       # build bucket if necessary

@@ -7,7 +7,7 @@
       <thead>
         <tr>
           <td colspan='2'>Case</td>
-          <td ng-repeat="q in evaluation_set.questions"
+          <td ng-repeat="q in question_set.questions"
               class="eval_question"
               ng-class="{subquestion: q.is_subquestion}">
             {{q.param}}
@@ -28,11 +28,11 @@
             {{k.name}}
             </a>
           </td>
-          <td ng-repeat="q in evaluation_set.questions"
+          <td ng-repeat="q in question_set.questions"
               ng-class="{subquestion: q.is_subquestion}"
               class="pie_container"
               ng-click="response_detail(k,q)">
-            <div evaluation-pie="evaluation_set.responses_lookup[k.id][q.id][0]"></div>
+            <div evaluation-pie="question_set.responses_lookup[k.id][q.id][0]"></div>
 
           </td>
         </tr>

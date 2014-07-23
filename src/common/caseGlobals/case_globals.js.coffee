@@ -3,45 +3,78 @@ angular.module("case-ui.globals", [
 ])
 
 
-.factory 'currentSchema', (Restangular, $rootScope, $q)->
+# WARNING -- question_set is a service: 'evaluationSetFactory'
 
-  currentSchema = {
-    active: {}
-    available: []
-  }
+.factory 'caseGlobals',
+  (Restangular, $rootScope, evaluationSetFactory, $q)->
 
-  currentSchema.id= ->
-    this.active.id
+    _this = {}
+    
+    _this.schemas = []
+    _this.current_schema = {}
 
-  currentSchema.get_available = ->
-    Restangular.all('schemas').getList().then (resp)->
-      currentSchema.available = resp
-      currentSchema
+    _this.question_sets = []
+    _this.current_question_set = {}
 
-  currentSchema.set_active = (id)->
-    if !id and currentSchema.available[0] and currentSchema.available[0].id
-      id = currentSchema.available[0].id
-    Restangular.one('schemas',id).get().then (resp)->
-      currentSchema.active = resp
-      $rootScope.$broadcast("currentSchemaChanged")
-
-
-  currentSchema.get_cases = ()->
-    Restangular.one('schemas',currentSchema.active.id)
-      .all('cases').getList().then (resp)->
-        resp
-
-  currentSchema
+    schemas_promise = null
+    _this.get_schemas = ()->
+      if !schemas_promise
+        schemas_promise = Restangular.all('schemas')
+          .getList().then (resp)->
+            _this.schemas = resp
+      else
+        schemas_promise
 
 
-# .factory 'currentEvaluation', (Restangular)->
+    question_sets_promise = null
+    _this.get_question_sets = ()->
+      if !question_sets_promise
+        question_sets_promise = Restangular.all('evaluations/sets')
+          .getList().then (resp)->
+            _this.question_sets = resp
+      else
+        question_sets_promise
 
-#   currentEvaluation = {
-#     active: null
-#     available: []
-#   }
 
-#   currentEvaluation
+    _this.set_current_schema = (id)->
+      id ||= 'first'
+      Restangular.one('schemas', id).get().then(
+        (resp)->
+          _this.current_schema = resp
+          _this.current_schema
+        (err)->
+          _this.current_schema = null
+          _this.current_schema
+      )
+
+    _this.set_current_question_set = (id)->
+      id ||= 'first'
+      evaluationSetFactory(id).then(
+        (resp)->
+          _this.current_question_set = resp #service!
+          _this.current_question_set
+        (err)->
+          _this.current_question_set = null
+          _this.current_question_set
+      )
+
+
+    $rootScope.$on("questionSetsModified", ()->
+      question_sets_promise = null
+      $scope.get_question_sets()
+    )
+
+    $rootScope.$on("schemasModified", ()->
+      schemas_promise = null
+      $scope.get_schemas()
+    )
+
+
+    _this.get_schemas()
+    _this.get_question_sets()
+    _this
+
+    
 
 
        

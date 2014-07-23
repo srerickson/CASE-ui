@@ -17,7 +17,7 @@
       <!-- Active Schema Config -->
       <li class="divider"></li>
       <li class="dropdown-header">Select Active Schema</li>
-      <li ng-repeat="schema in schemas" ng-class="{case_active: schema.id == current_schema_id}">
+      <li ng-repeat="schema in globals.schemas" ng-class="{case_active: schema.id == globals.current_schema.id}">
           <a class="set" href ng-click="set_current_schema(schema.id)">
             <i class="fa fa-check text-primary"/>
             {{schema.name}}</a>
@@ -28,7 +28,7 @@
 
       <li class="divider"></li>
       <li class="dropdown-header">Select Active Question Set</li>
-      <li ng-repeat="set in question_sets" ng-class="{case_active: set.id == current_set_id}">
+      <li ng-repeat="set in globals.question_sets" ng-class="{case_active: set.id == globals.current_question_set.id()}">
 
           <a class="set" href ng-click="set_current_set(set.id)">
             <i class="fa fa-check text-primary"/>

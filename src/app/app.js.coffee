@@ -26,20 +26,19 @@ angular.module("case-ui", [
     views:
       '':
         templateUrl: 'root/root.tpl.html'
-        controller: [ "current_schema_id", "current_set_id", "$scope"
-          (current_schema_id, current_set_id, $scope)->
-            $scope.current_schema_id = current_schema_id
-            $scope.current_set_id = current_set_id
-        ]
       'user-config':
         templateUrl: 'user_config/user.tpl.html'
         controller: 'UserConfigCtrl'
     resolve:
-      current_schema_id: ["$stateParams",($stateParams)->
-        return parseInt($stateParams.current_schema_id)
-      ],
-      current_set_id: ["$stateParams",($stateParams)->
-        return parseInt($stateParams.current_set_id)
+      current_schema:["caseGlobals", "$stateParams",
+        (caseGlobals, $stateParams)->
+          schema_id = parseInt($stateParams.current_schema_id)
+          caseGlobals.set_current_schema(schema_id)
+      ]
+      current_question_set: ["caseGlobals", "$stateParams",
+        (caseGlobals, $stateParams)->
+          set_id = parseInt($stateParams.current_set_id)
+          caseGlobals.set_current_question_set(set_id)
       ]
 
 
@@ -125,13 +124,16 @@ angular.module("case-ui", [
 
 
 .controller "AppCtrl",
-  ($scope, $location, currentUser, $state, $stateParams) ->
+  ($scope, $location, currentUser, caseGlobals,$state, $stateParams) ->
   
+    $scope.globals = caseGlobals
+
     # handle 401
     $scope.$on 'event:auth-loginRequired', (e, data)->
       currentUser.login_prompt()
 
     $scope.current_user = currentUser
+
 
     # force login
     currentUser.get().then(
