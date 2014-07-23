@@ -90,7 +90,7 @@ angular.module("case-ui.question-sets", [
       $scope.question_set.put().then(
         (ok)->
           broadcast_modification()
-          $state.go('evaluations',{all_responses: '0'})
+          # $state.go('evaluations',{all_responses: '0'})
         ,(err)->
 
       )

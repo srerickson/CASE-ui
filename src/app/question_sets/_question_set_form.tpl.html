@@ -1,29 +1,26 @@
 <form role="form" >
 
-  <div class="form-group col-sm-6">
+  <div class="form-group">
     <label class="control-label">Question Set Name</label>
     <input class="form-control" ng-model="question_set.name" />
   </div>
 
-  <div class="form-group col-sm-6">
+  <div class="form-group">
+    <label class="control-label">Description</label>
+      <textarea class="form-control input-sm" ng-model="question_set.description" rows="3"/>
+    </div>
+  </div>
 
-    <div class="checkbox">
+  <div class="form-group">
+<!--     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="question_set.locked"> locked?
       </label>
-    </div>
-
+    </div> -->
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="question_set.public_responses"> public responses?
       </label>
-    </div>
-
-  </div>
-
-  <div class="form-group col-sm-12">
-    <label class="control-label">Description</label>
-      <textarea class="form-control" ng-model="question_set.description" rows="5"/>
     </div>
   </div>
 

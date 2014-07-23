@@ -2,22 +2,31 @@
 
 <div class="panel panel-info">
   <div class="panel-heading">
-    <h4> New Schema </h4>
+    <h4> <i class="fa fa-sitemap"/> New Schema </h4>
   </div>
   <div class="panel-body">
 
-    <form>
-      <div ng-include=" 'schemas/_basic_fields.tpl.html' "/>
-      
-      <div class="form-group col-sm-12">
-        <p class="help-block">
-          Schema fields can be created after first save.
-        </p>
-        <button ng-click="save()" class="btn btn-success pull-right">
-          Save and continue editing <i class="fa fa-chevron-right"/>
-        </button>
-      </div>
+    <div class="col-sm-3"> &nbsp; </div>
 
-    </form>
+
+    <div class="col-sm-6">
+
+      <form>
+        <div ng-include=" 'schemas/_basic_fields.tpl.html' "/>
+        
+        <div class="form-group">
+          <p class="help-block">
+            Schema fields can be created after first save.
+          </p>
+          <button ng-click="save()" class="btn btn-success pull-right">
+            Save and continue editing <i class="fa fa-chevron-right"/>
+          </button>
+        </div>
+      </form>
+
+    </div>
+
+    <div class="col-sm-3"> &nbsp; </div>
+
   </div>
 </div>
