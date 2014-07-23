@@ -140,6 +140,20 @@ angular.module("case-ui", [
 
     $scope.current_user = currentUser
 
+    # Force Question Set reload on question set change
+    $scope.$on("questionSetModified", (e, q_set_id)->
+      caseGlobals.reload_question_sets()
+      # reload the current question set
+      # if it's the one that was modified
+      if caseGlobals.current_question_set
+        if caseGlobals.current_question_set.id() == q_set_id
+          caseGlobals.current_question_set.get()
+    )
+    # Should probably also do this for schemas, but
+    # it's not urgent since case links are forcing
+    # reload... so current schema is re-resolved.
+
+
 
     # force login
     currentUser.get().then(

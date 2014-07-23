@@ -47,7 +47,7 @@ angular.module("case-ui.question-sets", [
     $scope.save = ()->
       Restangular.all("evaluations/sets").post($scope.question_set).then(
         (resp)->
-          $rootScope.$broadcast("questionSetsModified")
+          $rootScope.$broadcast("questionSetModified", resp.id)
           $state.go('edit_question_set',{id: resp.id})
         ,(err)->
 
@@ -70,7 +70,15 @@ angular.module("case-ui.question-sets", [
           q.order = i
           reorder_req. questions_attributes.push { id: q.id, order: i }
         $scope.question_set.customPUT(reorder_req)
+        broadcast_modification()
     }
+
+    broadcast_modification = ->
+      $rootScope.$broadcast("questionSetModified", $scope.question_set.id)
+
+    $scope.$on('inplaceEdit:onSave', (e, thing)->
+      broadcast_modification()
+    )
 
     $scope.init_new_question = ->
       $scope.new_question.response_options = {}
@@ -81,7 +89,7 @@ angular.module("case-ui.question-sets", [
     $scope.save = ()->
       $scope.question_set.put().then(
         (ok)->
-          $rootScope.$broadcast("questionSetsModified")
+          broadcast_modification()
           $state.go('evaluations',{all_responses: '0'})
         ,(err)->
 
@@ -94,6 +102,7 @@ angular.module("case-ui.question-sets", [
         (resp)->
           $scope.question_set.questions.push(resp)
           $scope.init_new_question()
+          broadcast_modification()
         ,(err)->
           #TODO
           console.log err
@@ -109,7 +118,10 @@ angular.module("case-ui.question-sets", [
         question.remove().then(
           (ok)->
             _.remove($scope.question_set.questions, (q)-> q == question )
+            broadcast_modification()
         )
+
+
 
 
 .controller "QuestionCtrl", ($scope)->

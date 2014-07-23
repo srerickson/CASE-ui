@@ -12,9 +12,26 @@ angular.module("case-ui.evaluation-set", [
     state.questions   = [] # eval set's questions
     state.responses_lookup = {} # 2D lookup matrix for responses
 
+    responses_promise = null # a promise to cache result get request
+
+    state.get = ->
+      Restangular.one("evaluations/sets",set_id).get().then(
+        (resp)->
+          state.evaluation_set = resp
+          state.questions = resp.questions
+          state.aggregates = resp.aggregates
+          responses_promise = null
+          state
+        (err)->
+          state
+      )
+
     state.id = ->
       state.evaluation_set.id
 
+    ##
+    # Heler function for populating state.responses_lookup
+    #
     store_response = (r)->
       # build bucket if necessary
       state.responses_lookup ||= {}
@@ -32,7 +49,6 @@ angular.module("case-ui.evaluation-set", [
     ##
     # Response Loading Functions
     #
-    responses_promise = null
     state.get_responses = (params = {})->
       if !responses_promise
         if state.evaluation_set
@@ -65,12 +81,4 @@ angular.module("case-ui.evaluation-set", [
 
 
     # return the promise
-    Restangular.one("evaluations/sets",set_id).get().then(
-      (resp)->
-        state.evaluation_set = resp
-        state.questions = resp.questions
-        state.aggregates = resp.aggregates
-        state
-      (err)->
-
-    )
+    state.get()

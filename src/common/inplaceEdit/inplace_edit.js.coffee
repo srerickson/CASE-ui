@@ -38,11 +38,16 @@ angular.module("inplaceEdit", ['restangular'])
           save_method = scope.resource.post
 
         save_method().then(
-          (resp)->
-            if resp.id  # response includes object
-              scope.resource = resp
+          (save_resp)->
+            if save_resp.id  # response includes object
+              scope.resource = save_resp
+              scope.$emit('inplaceEdit:onSave',save_resp)
             else        # refresh object
-              scope.resource.get().then (resp)-> scope.resource = resp
+              scope.resource.get().then(
+                (get_resp)->
+                  scope.resource = get_resp
+                  scope.$emit('inplaceEdit:onSave',get_resp)
+              )
             element.toggleClass('editting')
             element.find('.inplace-edit-show')
               .addClass('flash')

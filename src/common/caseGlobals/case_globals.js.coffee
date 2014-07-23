@@ -25,6 +25,10 @@ angular.module("case-ui.globals", [
       else
         schemas_promise
 
+    _this.reload_schemas = ->
+      schemas_promise = null
+      _this.get_schemas()
+
 
     question_sets_promise = null
     _this.get_question_sets = ()->
@@ -35,11 +39,15 @@ angular.module("case-ui.globals", [
       else
         question_sets_promise
 
+    _this.reload_question_sets = ->
+      question_sets_promise = null
+      _this.get_question_sets()
 
     _this.set_current_schema = (id)->
       id ||= 'first'
       Restangular.one('schemas', id).get().then(
         (resp)->
+          console.log "current schema: #{resp.name}"
           _this.current_schema = resp
           _this.current_schema
         (err)->
@@ -51,23 +59,13 @@ angular.module("case-ui.globals", [
       id ||= 'first'
       evaluationSetFactory(id).then(
         (resp)->
+          console.log "current question set: #{resp.evaluation_set.name}"
           _this.current_question_set = resp #service!
           _this.current_question_set
         (err)->
           _this.current_question_set = null
           _this.current_question_set
       )
-
-
-    $rootScope.$on("questionSetsModified", ()->
-      question_sets_promise = null
-      $scope.get_question_sets()
-    )
-
-    $rootScope.$on("schemasModified", ()->
-      schemas_promise = null
-      $scope.get_schemas()
-    )
 
 
     _this.get_schemas()
