@@ -113,7 +113,7 @@ angular.module("case-ui.cases", [
       delete case_filter_params.set_id
       delete case_filter_params.user_evaluated
 
-    # fetch evaluation responses and cases
+    # fetch evaluation responses
     current_question_set.refresh_responses(eval_filter_params)
 
     Restangular.all('cases').getList(case_filter_params)
@@ -126,6 +126,16 @@ angular.module("case-ui.cases", [
           current_question_set.refresh_responses(eval_filter_params)
         ,(err) ->
           current_question_set.refresh_responses(eval_filter_params)
+      )
+
+    $scope.evaluation_detail = (k,q)->
+      if eval_filter_params.own then user_only = true else user_only = false
+      evaluationService.evaluation_detail(current_question_set,k,q,user_only)
+      .then(
+        (ok)->
+          current_question_set.refresh_responses_for(k,q,eval_filter_params)
+        ,(err) ->
+          current_question_set.refresh_responses_for(k,q,eval_filter_params)
       )
 
     $scope.go = (id)->

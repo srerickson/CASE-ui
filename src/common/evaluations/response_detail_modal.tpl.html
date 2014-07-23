@@ -3,37 +3,86 @@
     <h3 class="modal-title">Response Detail</h3>
 </div>
 
-<div class="modal-body table">
-  <div ng-repeat="r in responses"
-       class="row"
-       inplace-edit ng-model="responses[$index]">
+<div class="modal-body">
 
-    <div class="inplace-edit-show col-sm-12">
-      <div class="col-sm-2">
-        {{response_name(r)}}
-      </div>
-      <div class="col-sm-9">
-        {{r.comment}}
-      </div>
-      <div class="col-sm-1">
-        <i class="fa fa-edit inplace-edit-toggle"/>
-      </div>
+
+  <div class="row">
+
+    <div class="col-sm-4">
+      <h5>{{kase.name}}</h5>
     </div>
 
-    <div class="inplace-edit-form">
-      <div class="col-sm-2">
-        <select ng-model="responses[$index].answer" ng-options="parseInt(val) as name for (val,name) in question.response_options"></select>
-      </div>
-      <div class="col-sm-9">
-        <textarea ng-model="responses[$index].comment" class="form-control" rows='2'/> 
-      </div>
-      <div class="col-sm-1">
-        <i class="fa fa-times inplace-edit-cancel"/>
-        <i class="fa fa-check inplace-edit-save"/>
-      </div>
+    <div class="col-sm-8">
+      <h5>{{question.question}}</h5>
     </div>
-
 
   </div>
+
+  <div class="row">
+    <div class='col-sm-12'>
+      <table class="table table-bordered table-hover">
+        <tr ng-repeat="r in responses"
+            inplace-edit ng-model="responses[$index]"
+            class="disabled">
+
+          <!-- Question Answer -->
+          <td class="col-sm-2">
+            <div class="inplace-edit-show">
+              {{response_name(r)}}
+            </div>
+            <div class="inplace-edit-form">
+              <select ng-model="responses[$index].answer" ng-options="parseInt(val) as name for (val,name) in question.response_options" class="form-control input-sm"></select>
+            </div>
+          </td>
+
+          <!-- Comment -->
+          <td class="col-sm-9">
+            <div class="inplace-edit-show small">
+              {{r.comment}}
+              <span style="color:#aaa;font-style:italic" ng-show="!r.comment">no comment</span>
+            </div>
+            <div class="inplace-edit-form">
+              <textarea ng-model="responses[$index].comment" class="form-control" rows='2'/>
+            </div>
+          </td>
+
+          <!-- Action Buttons -->
+          <td class="col-sm-1">
+            <div ng-show="user_owned(r)">
+              <a class="primary-text inplace-edit-show">
+                <i class="fa fa-pencil inplace-edit-toggle"/>
+              </a>
+              <div class="inplace-edit-form">
+                <i class="fa fa-times inplace-edit-cancel"/>
+                <i class="fa fa-check inplace-edit-save"/>
+                <i class="fa fa-trash-o" ng-click="remove(r)"/>
+              </div>
+            </div>
+            <div ng-show="!user_owned(r)">
+              <i class="fa fa-ban" style="color:gray"/>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <h5>New Evaluation</h5>
+      <table class="table table-bordered">
+        <tr>
+          <td class="col-sm-2">
+            <select ng-model="new_response.answer" ng-options="parseInt(val) as name for (val,name) in question.response_options" class="form-control input-sm"></select>
+          </td>
+          <td class="col-sm-9">
+            <textarea ng-model="new_response.comment" class="form-control" rows='2'/>
+          </td>
+          <td class="col-sm-1">
+            <a href class="btn btn-success btn-block" ng-click="add_new_response()">
+              <i class="fa fa-plus"/>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
 
 </div>

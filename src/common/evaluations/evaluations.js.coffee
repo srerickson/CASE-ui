@@ -14,16 +14,16 @@ angular.module("case-ui.evaluations", [
 
   {
 
-    response_detail: (eval_set, k,q=null)->
+    evaluation_detail: (eval_set_service,kase,question,user_only=true)->
       $modal.open({
         controller: "EvaluationResponsePopupCtrl"
         templateUrl: "evaluations/response_detail_modal.tpl.html"
         resolve:
           #pass the restangular model, not the whole evaluationSet object
-          evaluation_set: ()-> evaluation_set
-          kase: ()-> k
-          question: ()-> q
-          all_responses: ()-> $stateParams.all_responses == '1'
+          evaluation_set: ()-> eval_set_service.evaluation_set
+          kase: ()-> kase
+          question: ()-> question
+          user_only: ()-> user_only
       }).result
 
     new_evaluation: (eval_set_service)->
@@ -37,28 +37,55 @@ angular.module("case-ui.evaluations", [
 
 
 .controller "EvaluationResponsePopupCtrl",
-  ($scope, $modalInstance, evaluation_set, kase, question, all_responses)->
+  ($scope, currentUser, $modalInstance, Restangular
+  evaluation_set, kase, question, user_only)->
+
     $scope.question = question
     $scope.kase = kase
+    $scope.responses = []
 
     params = {question_id: question.id, case_id: kase.id}
-    params.own = true if !all_responses
+    params.own = true if user_only
 
     evaluation_set.all("responses").getList(params)
-               .then (resp)-> $scope.responses = resp
+      .then (resp)-> $scope.responses = resp
+
+
+    init_new_response = ->
+      $scope.new_response = {
+        question_id: question.id
+        case_id: kase.id
+        answer: null
+        comment: null
+      }
+    init_new_response()
+
+    $scope.add_new_response = ->
+      evaluation_set.all('responses').post($scope.new_response).then(
+        (resp)->
+          $scope.responses.push(resp)
+          init_new_response()
+      )
+
+    $scope.remove = (response)->
+      message = "Do you really want to delete this evaluation response"
+      if window.confirm(message)
+        response.remove().then(
+          (ok)->
+            _.remove($scope.responses, (r)-> r == response)
+        )
 
     $scope.parseInt = (i)-> parseInt(i,10)
 
     $scope.response_name = (response)->
       $scope.question.response_options[response.answer]
 
-    $scope.save = (response)->
-      response.save().get().then (resp)->
-        response = resp
+    $scope.user_owned = (response)->
+      currentUser.id() == response.user_id
 
-    $scope.cancel = (response)->
-      response.get().then (resp)->
-        response = resp
+
+
+
 
 
 .controller "NewEvaluationPopup",

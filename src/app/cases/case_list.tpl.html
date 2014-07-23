@@ -17,21 +17,19 @@
       <tbody>
         <tr ng-repeat="k in cases">
           <td>
-            <a ui-sref="edit_case({case_id: k.id})" 
-               ui-sref-opts="{reload:true}">
+            <a ui-sref="edit_case({case_id: k.id})" ui-sref-opts="{reload:true}">
               <img class="img-thumbnail" ng-show="k._image_urls.sq60" ng-src="{{$parent.asset_url(k._image_urls.sq60)}}">
             </a>
           </td>
           <td>
-            <a ui-sref="edit_case({case_id: k.id})" 
-               ui-sref-opts="{reload:true}">
+            <a ui-sref="edit_case({case_id: k.id})" ui-sref-opts="{reload:true}">
             {{k.name}}
             </a>
           </td>
           <td ng-repeat="q in question_set.questions"
               ng-class="{subquestion: q.is_subquestion}"
               class="pie_container"
-              ng-click="response_detail(k,q)">
+              ng-click="evaluation_detail(k,q)">
             <div evaluation-pie="question_set.responses_lookup[k.id][q.id][0]"></div>
 
           </td>
