@@ -17,6 +17,11 @@ angular.module("case-ui.current-user", [
       Restangular.all("users").customGET('current_user').then (user) ->
         currentUser.user = user
 
+    currentUser.save = ->
+      this.user.put().then (user)->
+        currentUser.get()
+
+
     currentUser.id = ->
       this.user.id if this.user
 

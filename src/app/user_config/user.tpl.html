@@ -12,7 +12,10 @@
       <li  style="display: list-item;" ng-show="current_user.logged_in()">
         <div class="dropdown-header">logged in as {{current_user.name()}}</div>
         <a href ng-click="current_user.logout()" >logout</a>
+        <a href ui-sref='user' >change password</a>
       </li>
+
+
 
       <!-- Active Schema Config -->
       <li class="divider"></li>
