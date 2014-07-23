@@ -80,6 +80,12 @@ angular.module("case-ui", [
 )
 
 
+.config( ($uiViewScrollProvider)->
+  $uiViewScrollProvider.useAnchorScroll()
+)
+
+
+
 
 # additional Restangular config that need $window
 .run (Restangular, $window) ->
