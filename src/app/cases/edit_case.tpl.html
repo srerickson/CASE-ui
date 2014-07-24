@@ -13,25 +13,39 @@
 
         <table class="table table-hover">
           <tbody>
+            <tr class="field_set_description" ng-show="field_set.description">
+              <td colspan='3'>
+                <div class="well">
+                  <small>{{field_set.description}}</small>
+                </div>
+              </td>
+
+            </tr>
+
             <tr class="field" 
               ng-repeat="_fd in field_set.field_definitions" 
               ng-controller="FieldCtrl"
               ng-init="init_field(_fd)"
               inplace-edit ng-model="field_values[0]">
               <form role="form" name="field_value">
-                <th class="field_name">
+
+                <th class="field_name col-sm-1">
                   {{field_definition.name }}
                   <i class="fa fa-exclamation-circle" ng-show="kase.field_values[_fd.id] !=  field_values"/>
                 </th>
-                <td class="field_value">
+
+                <!-- Value -->
+                <td class="field_value_wrapper col-sm-10">
                   <div class="inplace-edit-form match-size">
-                    <div class="field_value_form" ng-include=' template_path(["form"]) '></div>
+                    <div class="field_value form {{_fd.type}}" ng-include=' template_path(["form"]) '></div>
                   </div>
-                  <div class="inplace-edit-show match-size" ng-include=' template_path() '>
-                    <div ng-include=' template_path() '></div>
+                  <div class="inplace-edit-show match-size">
+                    <div class="field_value show {{_fd.type}}" ng-include=' template_path() '></div>
                   </div>
                 </td>
-                <td>
+
+                <!-- Action Buttons -->
+                <td class="col-sm-1">
                   <div class="inplace-edit-form">
                     <a href class="inplace-edit-save">
                       <i class="fa fa-check"></i> 
@@ -41,7 +55,7 @@
                     </a>
                   </div> 
                   <div class="inplace-edit-show">
-                    <a href class="inplace-edit-toggle">
+                    <a href class="inplace-edit-toggle pull-right">
                       <i class="fa fa-pencil"/>
                     </a>
                   </div>
