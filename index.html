@@ -30,7 +30,9 @@
             <span class="icon-bar"></span>
           </button>
           <div class="navbar-brand">
-            CASE
+            <a href ui-sref="cases">
+              CASE
+            </a>
             <small>
               v0.0.1
             </small>
@@ -38,25 +40,19 @@
         </div>
         <div class="collapse navbar-collapse" collapse="menuCollapsed">
           <ul class="nav navbar-nav">
-            <li ui-sref-active="active">
-              <a href ui-sref="cases({case_filter: 'all'})">
-                <i class="fa fa-puzzle-piece"></i>
-                Cases
-              </a>
-            </li>
-            <li>
+  <!--      <li>
               <a href="#" ui-sref="evaluations({all_responses: '0'})">
                 <i class="fa fa-sliders"></i>
                Evaluations
               </a>
-            </li>
+            </li> -->
           </ul>
           <div ui-view="user-config" ></div>
         </div>
       </div>
     </div>
 
-    <div class="container" ui-view></div>
+    <div class="container" ui-view autoscroll="true"></div>
 
     <footer class="footer">
       <div class="container">
