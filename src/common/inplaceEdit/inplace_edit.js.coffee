@@ -12,18 +12,23 @@ angular.module("inplaceEdit", ['restangular'])
       element.addClass("inplace-edit")
 
       element.find('.inplace-edit-toggle').click ()->
+        # when we go into edit mode, grab a copy of the resource
+        # to be reverted to on cancel
+        if !element.hasClass('editting')
+          scope.copy_for_cancel = angular.copy(scope.resource)
+          console.log scope.copy_for_cancel
+
 
         show_height= element.find('.inplace-edit-show.match-size')
           .first().css('height')
         show_width= element.find('.inplace-edit-show.match-size')
           .first().css('width')
-
         element.find('.inplace-edit-form.match-size')
           .first().css('height', show_height)
         element.find('.inplace-edit-form.match-size')
           .first().css('width', show_width)
-
         element.toggleClass('editting')
+
 
       element.find('.inplace-edit-save').click ()->
         _save()
@@ -32,22 +37,21 @@ angular.module("inplaceEdit", ['restangular'])
         _cancel()
 
       _save = ()->
+        
         if scope.resource.id
-          save_method = scope.resource.put
+          save_method = 'put'
         else
-          save_method = scope.resource.post
+          save_method = 'post'
 
-        save_method().then(
+        scope.resource[save_method]().then(
           (save_resp)->
-            if save_resp.id  # response includes object
-              scope.resource = save_resp
-              scope.$emit('inplaceEdit:onSave',save_resp)
-            else        # refresh object
-              scope.resource.get().then(
-                (get_resp)->
-                  scope.resource = get_resp
-                  scope.$emit('inplaceEdit:onSave',get_resp)
-              )
+            if save_resp.id  and !scope.resource.id
+              scope.resource.id = save_resp.id
+            scope.resource.get().then(
+              (get_resp)->
+                scope.resource = get_resp
+                scope.$emit('inplaceEdit:onSave',get_resp)
+            )
             element.toggleClass('editting')
             element.find('.inplace-edit-show')
               .addClass('flash')
@@ -59,9 +63,18 @@ angular.module("inplaceEdit", ['restangular'])
         )
 
       _cancel = (resource)->
-        scope.resource.get().then (resp)->
-          scope.resource = resp
-          element.toggleClass('editting')
+        # fetch a fresh copy
+        if scope.resource.id
+          scope.resource.get().then (resp)->
+            scope.resource = resp
+            element.toggleClass('editting')
+       
+        else
+          # use the copy made for cancel
+          scope.$apply ()->
+            angular.copy(scope.copy_for_cancel, scope.resource)
+            element.toggleClass('editting')
+
 
 
   }
