@@ -165,16 +165,18 @@ angular.module("case-ui", [
         currentUser.login_prompt().then ()->
           # reload
           $state.transitionTo(
-            $state.current,
-            $stateParams,
+            'cases',{},
             { reload: true, inherit: true, notify: true }
           )
     )
 
     # FIXME - this needs to handle urls that are already 'full'
     $scope.asset_url = (path)->
-      base = currentUser.server() || ""
-      base + path
+      if /^http[s]?:\/\//.test(path)
+        path
+      else
+        base = currentUser.server() || ""
+        base + path
 
 
 
