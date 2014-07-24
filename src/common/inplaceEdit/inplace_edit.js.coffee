@@ -16,8 +16,6 @@ angular.module("inplaceEdit", ['restangular'])
         # to be reverted to on cancel
         if !element.hasClass('editting')
           scope.copy_for_cancel = angular.copy(scope.resource)
-          console.log scope.copy_for_cancel
-
 
         show_height= element.find('.inplace-edit-show.match-size')
           .first().css('height')
