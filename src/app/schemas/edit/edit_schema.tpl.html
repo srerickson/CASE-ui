@@ -60,12 +60,12 @@
 
         <!-- new field set form by default -->
         <div ng-controller="NewFieldSetCtrl" class="col-sm-12">
-          <form name="field_set">
+          <form name="field_set" ng-submit="save()">
             <div ng-include=" 'schemas/edit/field_set/_field_set_form.tpl.html' ">
             </div>
             <div class="col-sm-12">
               <div class="pull-right">
-                <input type="submit" ng-click="save()" class="btn btn-success" value='Create Field Set'>
+                <input type="submit" class="btn btn-success" value='Create Field Set'>
                 </input>
               </div>
             </div>
