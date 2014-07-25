@@ -1,17 +1,13 @@
 
 <div inplace-edit ng-model="field_set" class="col-sm-12">
   <div class="inplace-edit-show row">
-    <div class="col-sm-2">
-      <h4>
-        {{field_set.name}}
-        <i class="fa fa-pencil inplace-edit-toggle" style='font-size:14px;'/>
-      </h4>
-    </div>
-    <div class="col-sm-10 " style="margin-top:10px;">
-      <small>
-        {{field_set.description}}
-      </small>
-    </div>
+    <h4 class="field_set_name">
+      {{field_set.name}}
+      <i class="fa fa-pencil inplace-edit-toggle" style='font-size:14px;'/>
+    </h4>
+    <small>
+      {{field_set.description}}
+    </small>
   </div>
   <div class="inplace-edit-form">
     <form role="form">
