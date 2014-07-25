@@ -1,38 +1,76 @@
 
+<div class="edit_schema">
 
-<div class="panel panel-info">
-  <div class="panel-heading">
+  <div class="panel panel-info">
 
-    <!-- Single button -->
-    <div class="btn-group">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        Editing Schema: {{schema.name }} <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        <li><a href ui-sref="edit_schema({schema_id: schema.id})">Edit name/description</a></li>
-        <li class="divider"></li>
-        <li role="presentation"  class="dropdown-header">
-          <span ng-show="schema.field_sets.length == 0">no</span> field sets
-        </li>
-        <li ng-repeat="field_set in schema.field_sets">
-          <a ui-sref="edit_schema.edit_field_set({schema_id: schema.id, field_set_id: field_set.id})">{{field_set.name}}</a>
-        </li>
-        <li class="divider"></li>
-        <li>
-          <a ui-sref="edit_schema.new_field_set({schema_id: schema.id})">Create a field set</a>
-        </li>
-      </ul>
+    <div class="panel-heading">
+      <h4> <i class="fa fa-sitemap"/> Editing Schema {{schema.name }}</h4>
     </div>
 
-  </div>
-  <div class="panel-body" ui-view="form">
-    <form role="form">
-      <div ng-include=" 'schemas/_basic_fields.tpl.html' "></div>
-      <div class="col-sm-12">
-        <div class="pull-right">
-          <button ng-click="save()"  class="btn btn-default">Save</button>
+    <div class="panel-body">
+
+      <!-- Edit Schema / FieldSet Nav -->
+      <div class="col-sm-3 well">
+        <form role="form" inplace-edit ng-model="schema">
+          <div class="inplace-edit-show">
+            <div class="form-group">
+              <i class="fa fa-pencil inplace-edit-toggle pull-right"/>
+              <h5>{{schema.name}}
+              </h5> 
+            </div>
+            <div class="form-group">
+              {{schema.description}}
+            </div>
+          </div>
+          <div class="inplace-edit-form">
+            <div class="form-group">
+              <input class="form-control input-sm" ng-model="schema.name" />
+            </div>
+            <div class="form-group">
+              <textarea class="form-control input-sm" ng-model="schema.description"/>
+            </div>
+            <button class="inplace-edit-save btn btn-success btn-xs">update</button>
+            <button class="inplace-edit-cancel btn btn-warning btn-xs">cancel</button>
+          </div>
+        </form>
+
+        <!-- Field Set Buttons -->
+        <div style="margin-top:10px;border-top:1px solid lightgray;" ng-show="schema.field_sets.length">
+          <h6>Edit Field Sets:</h6>
+          <a class="btn btn-default btn-xs btn-block"
+              ng-repeat="field_set in schema.field_sets"
+              ui-sref-active="active"
+              ui-sref="edit_schema.edit_field_set({schema_id: schema.id, field_set_id: field_set.id})">
+            {{field_set.name}}
+          </a>
+
+          <a ui-sref-active="disabled" 
+            class="btn-primary btn btn btn-block" ui-sref="edit_schema({schema_id: schema.id})">
+            New field set
+          </a>
+        </div>
+
+      </div>
+
+
+      <!-- Field Set Form -->
+      <div class="col-sm-9" ui-view="form">
+
+        <!-- new field set form by default -->
+        <div ng-controller="NewFieldSetCtrl">
+          <div ng-include=" 'schemas/edit/field_set/_field_set_form.tpl.html' ">
+          </div>
+          <div class="col-sm-12">
+            <div class="pull-right">
+              <button ng-click="save()" class="btn btn-success">
+                <i class="fa fa-plus"/> Create Field Set
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </form>
+
+
+    </div>
   </div>
 </div>

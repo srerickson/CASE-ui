@@ -10,14 +10,6 @@ angular.module("case-ui.schemas.edit.field_set", [
 
 .config( ($stateProvider) ->
 
-  $stateProvider.state "edit_schema.new_field_set",
-    url: "/field_set/new"
-    views:
-      "form@edit_schema":
-        controller: "NewFieldSetCtrl"
-        templateUrl: "schemas/edit/field_set/new_field_set.tpl.html"
-    data:
-      pageTitle: "New Field Set"
 
   $stateProvider.state "edit_schema.edit_field_set",
     url: "/field_set/:field_set_id"
