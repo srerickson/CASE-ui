@@ -1,16 +1,24 @@
 .edit_schema {
 
+  .inplace-edit[ng-model="field_set"],
   .inplace-edit[ng-model="schema"]{
     .inplace-edit-toggle.fa-pencil {
       display:none;
     }
   }
 
+  .inplace-edit[ng-model="field_set"]:hover,
   .inplace-edit[ng-model="schema"]:hover {
     .inplace-edit-toggle.fa-pencil {
       display:inline;
     }
   }
 
+
+  .field_definitions {
+    margin-top: 10px;
+    border-top: 1px solid lightgray;
+
+  }
 
 }

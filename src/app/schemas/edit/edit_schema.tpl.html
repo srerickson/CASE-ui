@@ -57,16 +57,17 @@
       <div class="col-sm-9" ui-view="form">
 
         <!-- new field set form by default -->
-        <div ng-controller="NewFieldSetCtrl">
-          <div ng-include=" 'schemas/edit/field_set/_field_set_form.tpl.html' ">
-          </div>
-          <div class="col-sm-12">
-            <div class="pull-right">
-              <button ng-click="save()" class="btn btn-success">
-                <i class="fa fa-plus"/> Create Field Set
-              </button>
+        <div ng-controller="NewFieldSetCtrl" class="col-sm-12">
+          <form name="field_set">
+            <div ng-include=" 'schemas/edit/field_set/_field_set_form.tpl.html' ">
             </div>
-          </div>
+            <div class="col-sm-12">
+              <div class="pull-right">
+                <input type="submit" ng-click="save()" class="btn btn-success" value='Create Field Set'>
+                </input>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
 
