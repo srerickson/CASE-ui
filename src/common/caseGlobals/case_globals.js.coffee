@@ -68,8 +68,6 @@ angular.module("case-ui.globals", [
       )
 
 
-    _this.get_schemas()
-    _this.get_question_sets()
     _this
 
     

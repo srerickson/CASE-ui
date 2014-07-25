@@ -155,6 +155,11 @@ angular.module("case-ui", [
     # reload... so current schema is re-resolved.
 
 
+    # when server changes, refresh gloabls
+    $scope.$watch "current_user.server()", (newServer)->
+      $scope.globals.reload_schemas()
+      $scope.globals.reload_question_sets()
+
 
     # force login
     currentUser.get().then(
