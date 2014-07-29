@@ -4,6 +4,12 @@ response_option_groups = {
     "0": "N/A"
     "1": "YES"
     "-1": "NO"
+  "Likert":
+    "1": "Stronly Disagree"
+    "2": "Disagree"
+    "3": "Neither agree nor disagree"
+    "4": "Agree"
+    "5": "Stronly Agree"
 }
 
 angular.module("case-ui.question-sets.response-options", [])
