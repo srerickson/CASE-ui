@@ -1,5 +1,5 @@
 angular.module("case-ui.question-sets", [
-  "case-ui.question-sets.response-options"
+  "case-ui.evaluations.question-types"
   "restangular"
   "ui.router"
   "ui.sortable"

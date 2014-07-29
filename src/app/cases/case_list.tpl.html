@@ -30,7 +30,8 @@
               ng-class="{subquestion: q.is_subquestion}"
               class="pie_container"
               ng-click="evaluation_detail(k,q)">
-            <div evaluation-pie="question_set.responses_lookup[k.id][q.id][0]"></div>
+            <div evaluation-responses="question_set.responses_lookup[k.id][q.id][0]"
+                 for-question="q"></div>
 
           </td>
         </tr>

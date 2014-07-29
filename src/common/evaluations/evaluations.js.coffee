@@ -1,12 +1,30 @@
 angular.module("case-ui.evaluations", [
+  "case-ui.evaluations.question-types"
   "case-ui.evaluation-set"
-  "case-ui.evaluation-vis"
   "ui.router"
   "ui.select"
   "ui.bootstrap"
   "restangular"
 ])
 
+
+
+# renders response aggregates using registered
+# questionType
+
+.directive "evaluationResponses", (questionType)->
+  linker = (scope, elem, attrs)->
+    scope.$watch 'evaluationResponses', (n)->
+      return null unless n
+      q_type = questionType(scope.forQuestion)
+      q_type.render(elem, n) if !!q_type
+  return {
+    link: linker
+    scope: {
+      forQuestion: "="
+      evaluationResponses: "="
+    }
+  }
 
 
 
@@ -33,6 +51,9 @@ angular.module("case-ui.evaluations", [
         resolve:
           evaluation_set: ()-> eval_set_service.evaluation_set
       ).result
+
+    question_type: (q)->
+
   }
 
 

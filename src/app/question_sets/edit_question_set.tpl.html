@@ -86,10 +86,10 @@
             <!-- Response Options -->
             <td>
               <span class="inplace-edit-show">
-                {{ question.response_options | responseOptionsName }}
+                {{ question | questionType }}
               </span>
               <span class="inplace-edit-form">
-                <div response-options-select="question.response_options"/>
+                <div question-type-select="question.response_options"/>
               </span>
             </td>
 

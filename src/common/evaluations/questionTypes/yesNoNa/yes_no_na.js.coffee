@@ -1,3 +1,29 @@
+angular.module("case-ui.evaluations.question-types.yes-no-na", [])
+
+
+.factory "yesNoNaQuestionType", ()->
+  {
+    response_options:
+      "0": "N/A"
+      "1": "YES"
+      "-1": "NO"
+    render: (elem, resp)->
+      setTimeout( ()->
+        draw_answer_pie.apply( elem,[
+          resp.yes_count,
+          resp.no_count,
+          resp.n_a_count,
+          # scope.result.blank_count,
+          resp.yes_comment_count,
+          resp.no_comment_count,
+          resp.n_a_comment_count,
+        ])
+      ,1)
+
+
+  }
+
+
 draw_answer_pie = (y_c, n_c, na_c, y_comments, n_comments, na_comments) ->
   elem = this[0]
   $elem = this
@@ -40,34 +66,3 @@ draw_answer_pie = (y_c, n_c, na_c, y_comments, n_comments, na_comments) ->
             ).attr("d", arc)
 
   svg.append("svg:text").attr("dy", ".4em").attr("style", text_style).text total
-
-
-
-
-angular.module('case-ui.evaluation-vis',[])
-
-
-.directive "evaluationPie", [ ()->
-
-  linker = (scope, elem, attrs)->
-
-    scope.$watch attrs.evaluationPie, (n)->
-      return unless n
-      setTimeout( ()->
-        draw_answer_pie.apply( elem,[
-          n.yes_count,
-          n.no_count,
-          n.n_a_count,
-          # scope.result.blank_count,
-          n.yes_comment_count,
-          n.no_comment_count,
-          n.n_a_comment_count,
-        ])
-      ,1)
-
-  return {
-    link: linker
-  }
-
-]
-
