@@ -24,8 +24,6 @@ angular.module("case-ui.evaluations.question-types.likert", [])
       for count in data
         total += count
 
-      console.log total
-
       w = $elem.width() - 4
       h = $elem.height() - 4
       r = Math.min(w, h) / 2
