@@ -1,26 +1,26 @@
 
 <div class="modal-header">
-    <div class="pull-right"><a href ng-click="$close()"><i class="fa fa-times"/></a></div>
+    <div class="pull-right"><a href ng-click="$dismiss()"><i class="fa fa-times"/></a></div>
     <h4 class="modal-title">Field Settings</h4>
 </div>
 
 <div class="modal-body">
 
   <div class="row">
-    <div class="col-sm-12">
+    <form class="col-sm-12" ng-submit="save()">
 
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-6">
             <label class="control-label small">Field Name</label>
-            <input class="form-control input-sm" ng-model="field_definition.name" />
+            <input class="form-control input-sm" ng-model="field_definition.name" ng-required="true"/>
           </div>
 
-          <div class="col-sm-4">
-            <label class="control-label small">Param</label>
+          <div class="col-sm-3">
+            <label class="control-label small">Label</label>
             <input class="form-control input-sm" ng-model="field_definition.param" />
           </div>
 
-          <div class="form-group col-sm-4">
+          <div class="form-group col-sm-3">
             <label class="control-label small">Field Type</label>
             <select class="form-control input-sm" 
                     ng-model="field_definition.type" 
@@ -42,17 +42,17 @@
         <div class="row" style="margin-top:20px;">
           <div class="col-sm-12">
             <div class="pull-right">
-              <button ng-click="save()"  class="btn btn-success btn-sm">
+              <button type="submit"  class="btn btn-success btn-sm">
                 <i class="fa fa-plus"> save </i>
               </button>
-              <button ng-click="cancel()"  class="btn btn-warning btn-sm">
+              <a ng-click="$dismiss('cancelled')"  class="btn btn-warning btn-sm">
                 <i class="fa fa-times"> cancel </i>
-              </button>
+              </a>
             </div>
           </div>
         </div>
 
-    </div>
+    </form>
   </div>
 
 </div>

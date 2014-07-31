@@ -1,4 +1,3 @@
-
 # FIXME - put this somewhere else -- config?
 FD_TYPES = ["SelectField","TextField"]
 
@@ -11,29 +10,54 @@ angular.module("case-ui.schemas.edit.field_set.field_definition", [
 ])
 
 
-# FieldDefinition list on FieldSet page
+
+# All Field Definition update actions go through here
+#
 #
 .controller "FieldDefinitionListCtrl", ($scope)->
   $scope.field_set.field_definitions ||= []
-  # for sorting field defs
   $scope.sort_options = {
     axis: 'y'
     handle: ".handle"
-    stop: ()->
+    stop: ()-> $scope.sort_field_definitions()
+  }
+  
+  $scope.sort_field_definitions = ()->
+    current_order = _.map($scope.field_set.field_definitions, (fd)-> fd.order )
+    correct_order = [0..($scope.field_set.field_definitions.length-1)]
+    if !angular.equals(current_order, correct_order)
       reorder_req = { field_definitions_attributes: [] }
       for fd, i in $scope.field_set.field_definitions
         fd.order = i
         reorder_req.field_definitions_attributes.push { id: fd.id, order: i }
       $scope.field_set.customPUT(reorder_req)
-  }
-  $scope.$on 'deletedFieldDefinition', (e, data)->
-    _.remove($scope.field_set.field_definitions, (fd)-> fd.id == data.id )
+      $scope.$emit('fieldDefinitionsSorted')
+
+  $scope.remove_field_definition = (id)->
+    _.remove($scope.field_set.field_definitions, (fd)-> fd.id == id )
+    $scope.sort_field_definitions()
+    $scope.$emit('fieldDefinitionRemoved', $scope.field_definition)
+
+  $scope.add_field_definition = (new_fd)->
+    $scope.field_set.field_definitions.push new_fd
+    $scope.$emit('fieldDefinitionCreated')
+
+
+  $scope.refresh_field_definition = (id)->
+    idx = _.findIndex($scope.field_set.field_definitions, (fd)-> fd.id==id)
+    $scope.field_set.field_definitions[idx].get()
+    .then (resp)->
+      $scope.field_set.field_definitions[idx] = resp
+      $scope.$emit('fieldDefinitionUpdated')
+
 
 
 # Single row in FieldDefinition list
+# delegates saving and deleting to list controller
 #
 .controller "FieldDefinitionCtrl", ($scope, $modal) ->
   tpl = "schemas/edit/field_set/field_definition/field_definition.tpl.html"
+
   $scope.start_popup_editor = ()->
     modal_instance = $modal.open({
       templateUrl: tpl
@@ -42,25 +66,21 @@ angular.module("case-ui.schemas.edit.field_set.field_definition", [
       windowClass: 'field_definition'
       resolve:
         field_definition: ()->
-          return $scope.field_definition
-    }).result.then(
-      (popup_resp)-> $scope.refresh(),
-      ()-> $scope.refresh()
-    )
+          $scope.field_definition.clone()
+    }).result.then (updated_fd)->
+      $scope.refresh_field_definition(updated_fd.id)
 
-  $scope.refresh = ()->
-    $scope.field_definition.get().then (resp)->
-      $scope.field_definition = resp
   $scope.delete = ()->
     message = "Are you sure you want to delet it?\n"
     message += "All data associated with this field will also be destroyed!"
     if window.confirm(message)
       $scope.field_definition.remove().then(
         (resp)->
-          $scope.$emit('deletedFieldDefinition', $scope.field_definition)
+          $scope.remove_field_definition(resp.id)
         ,(err)->
           #TODO: handle errors
       )
+
 
 
 # Popup FieldDefinition editor
@@ -69,7 +89,6 @@ angular.module("case-ui.schemas.edit.field_set.field_definition", [
   ($scope, $modalInstance, field_definition)->
     $scope.field_definition = field_definition
     $scope.field_definition_types = FD_TYPES
-    original_fd = angular.copy($scope.field_definition)
 
     $scope.field_option_form_tpl = ()->
       base_path = "schemas/edit/field_set/field_definition/"
@@ -79,39 +98,40 @@ angular.module("case-ui.schemas.edit.field_set.field_definition", [
         base_path+"_select_field_options.tpl.html"
       else
         ""
-
     $scope.save = ()->
       $scope.field_definition.put().then(
-        (resp)->
-          $modalInstance.close(true)
+        (ok)->
+          $scope.$close($scope.field_definition)
         ,(err)->
-          #TODO: handle errors
+          #TODO
       )
-    $scope.cancel = ()->
-      $modalInstance.close(false)
+
 
 
 # New FielDefinition panel
 #
 .controller "NewFieldDefinitionCtrl", ($scope)->
   $scope.field_definition_types = FD_TYPES
+
   $scope.init_new_field_definition = ()->
     $scope.new_field_definition = {
       name: ""
       param: ""
       description: ""
       type: "TextField"
-      order: $scope.field_set.field_definitions.length
     }
+
   $scope.cancel_new_field_definition = ()->
     $scope.new_field_definition = null
+
   $scope.save_new_field_definition = ()->
+    $scope.new_field_definition.order= $scope.field_set.field_definitions.length
     $scope.field_set.all('field_definitions')
       .post($scope.new_field_definition)
       .then(
         (resp)->
-          $scope.field_set.field_definitions.push resp
-          $scope.cancel_new_field_definition()
+          $scope.add_field_definition(resp)
+          $scope.init_new_field_definition()
         ,(err)->
           #TODO: handle errors
 

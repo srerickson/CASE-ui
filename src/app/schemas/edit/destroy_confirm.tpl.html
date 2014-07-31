@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3 class="modal-title">Are You Sure?</h3>
+</div>
+
+<div class="modal-body">
+
+  <p>
+    Deleting this schema will delete all the case data associated with it.<br/>
+    <b>{{schema._case_count}} case(s) current use this schema </b> 
+  </p>
+  <p>
+    <a class="btn btn-danger" ng-click="$close()">Delete it</a>
+    <a class="btn btn-primary" ng-click="$dismiss()">Nevermind, don't delete</a>
+  </p>
+
+</div>

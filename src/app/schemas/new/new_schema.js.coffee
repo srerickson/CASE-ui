@@ -23,8 +23,7 @@ angular.module("case-ui.schemas.new",[
     Restangular.all('schemas').post($scope.schema).then(
       (resp)->
         $state.go('edit_schema',{schema_id: resp.id})
+        $scope.$emit('schemaCreated', resp.id)
       ,(err)->
         console.log err
     )
-  $scope.cancel = ()->
-    $state.go('schemas')

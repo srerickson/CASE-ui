@@ -23,14 +23,40 @@ angular.module("case-ui.schemas.edit",[
 )
 
 
-.controller "EditSchemaCtrl", ($scope, schema)->
+.controller "EditSchemaCtrl", ($scope, schema, $modal, $state)->
   $scope.schema = schema
 
-  $scope.save = ()->
-    $scope.schema.put()
+  broadcast_modification = ->
+    $scope.$emit("schemaModified", $scope.schema.id)
 
-  $scope.cancel = ()->
-    $state.go('schemas')
+  broadcast_removal = ->
+    $scope.$emit("schemaRemoved", $scope.schema.id)
+
+  $scope.$on('inplaceEdit:onSave', (e, thing)->
+    broadcast_modification()
+  )
+
+  # When Field Definitions change, may need to update current schema
+  $scope.$on 'fieldDefinitionRemove', (e, thing)-> broadcast_modification()
+  $scope.$on 'fieldDefinitionUpdated', (e, thing)-> broadcast_modification()
+  $scope.$on 'fieldDefinitionCreated', (e, thing)-> broadcast_modification()
+  $scope.$on 'fieldDefinitionsSorted', (e, thing)-> broadcast_modification()
 
 
 
+  $scope.remove = ()->
+    $modal.open(
+      templateUrl: "schemas/edit/destroy_confirm.tpl.html"
+      controller: ($scope, schema)->
+        $scope.schema = schema
+      resolve: {
+        schema: ()-> $scope.schema
+      }
+    ).result.then(
+      (confirm)->
+        $scope.schema.remove().then ()->
+          broadcast_removal()
+          $state.go('cases')
+      ,(dismiss)->
+        # do nothing
+    )

@@ -24,86 +24,89 @@
 </div>
 
 
-<div ng-controller="FieldDefinitionListCtrl" class="field_definitions col-sm-12">
-  <h5>Field Definitions</h5>
-  <table class="table table-condensed table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Param</th>
-        <th>Field Type</th>
-        <th>Description</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody ui-sortable="sort_options" ng-model="field_set.field_definitions">
-      <tr ng-repeat="field_definition in field_set.field_definitions"
-          ng-controller="FieldDefinitionCtrl">
-        <td class="handle">{{field_definition.order}}</td>
-        <td>{{field_definition.name}}</td>
-        <td>{{field_definition.param}}</td>
-        <td>{{field_definition.type}}</td>
-        <td>{{field_definition.description | characters:30}}</td>
-        <td>
-          <button ng-click="start_popup_editor()" class="btn btn-primary btn-xs">
-            <i class="fa fa-edit" />
-          </button>
-          <button ng-click="delete()" class="btn btn-danger btn-xs">
-            <i class="fa fa-trash-o" />
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<div ng-controller="FieldDefinitionListCtrl">
 
-
-<div ng-controller="NewFieldDefinitionCtrl">
-  <div class="col-sm-12 control-group">
-    <div class="pull-right">
-      <button ng-click="init_new_field_definition()"  class="btn btn-default btn-sm">
-        <i class="fa fa-plus"> Add Field </i>
-      </button>
-    </div>
+  <div class="field_definitions col-sm-12">
+    <h5>Field Definitions</h5>
+    <table class="table table-condensed table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Label</th>
+          <th>Field Type</th>
+          <th>Description</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody ui-sortable="sort_options" ng-model="field_set.field_definitions">
+        <tr ng-repeat="fd in field_set.field_definitions"
+            ng-controller="FieldDefinitionCtrl"
+            ng-init="field_definition = fd">
+          <td class="handle">{{field_definition.order}}</td>
+          <td>{{field_definition.name}}</td>
+          <td>{{field_definition.param}}</td>
+          <td>{{field_definition.type}}</td>
+          <td>{{field_definition.description | characters:30}}</td>
+          <td>
+            <button ng-click="start_popup_editor()" class="btn btn-primary btn-xs">
+              <i class="fa fa-edit" />
+            </button>
+            <button ng-click="delete()" class="btn btn-danger btn-xs">
+              <i class="fa fa-trash-o" />
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <div class="col-sm-12 control-group" collapse="!new_field_definition">
-    <form role="form" class="well" ng-submit="save_new_field_definition()">
-      <div class="form-group col-sm-4">
-        <label class="control-label small">Field Name</label>
-        <input class="form-control input-sm" ng-model="new_field_definition.name" ng-required="true" />
-      </div>
-      <div class="form-group col-sm-4">
-        <label class="control-label small">Param</label>
-        <input class="form-control input-sm" ng-model="new_field_definition.param" />
-      </div>
-      <div class="form-group col-sm-4">
-        <label class="control-label small">Field Type</label>
-        <select class="form-control input-sm" 
-                ng-model="new_field_definition.type" 
-                ng-options="t for t in field_definition_types" />
 
+  <div ng-controller="NewFieldDefinitionCtrl">
+    <div class="col-sm-12 control-group">
+      <div class="pull-right">
+        <button ng-click="init_new_field_definition()"  class="btn btn-primary btn-sm">
+          New Field </i>
+        </button>
       </div>
-      <div class="form-group col-sm-12">
-        <label class="control-label small">Description</label>
-        <textarea class="form-control input-sm" ng-model="new_field_definition.description" rows="2"/>
-      </div>
+    </div>
 
-      <div class="col-sm-12">
-        <div class="pull-right">
-          <button type="submit" class="btn btn-success btn-sm">
-            <i class="fa fa-plus"> save </i>
-          </button>
-          <button ng-click="cancel_new_field_definition()"  class="btn btn-warning btn-sm">
-            <i class="fa fa-times"> cancel </i>
-          </button>
+    <div class="col-sm-12 control-group" collapse="!new_field_definition">
+      <form role="form" class="well" ng-submit="save_new_field_definition()">
+        <div class="form-group col-sm-6">
+          <label class="control-label small">Field Name</label>
+          <input class="form-control input-sm" ng-model="new_field_definition.name" ng-required="true" />
+        </div>
+        <div class="form-group col-sm-3">
+          <label class="control-label small">Label</label>
+          <input class="form-control input-sm" ng-model="new_field_definition.param" />
+          <p class="help-block small">single word description</p>
+        </div>
+        <div class="form-group col-sm-3">
+          <label class="control-label small">Field Type</label>
+          <select class="form-control input-sm" 
+                  ng-model="new_field_definition.type" 
+                  ng-options="t for t in field_definition_types" />
 
         </div>
-      </div>
+        <div class="col-sm-6 help-block">
+          additional field settings are available after saving
+        </div>
 
-      <div class="clearfix"/>
-    </form>
+        <div class="col-sm-6">
+          <div class="pull-right">
+            <button type="submit" class="btn btn-success btn-sm">
+              <i class="fa fa-plus"> add field </i>
+            </button>
+            <button ng-click="cancel_new_field_definition()"  class="btn btn-warning btn-sm">
+              <i class="fa fa-times"> cancel </i>
+            </button>
+
+          </div>
+        </div>
+
+        <div class="clearfix"/>
+      </form>
+    </div>
   </div>
 </div>
-

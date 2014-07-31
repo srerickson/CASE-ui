@@ -150,10 +150,25 @@ angular.module("case-ui", [
         if caseGlobals.current_question_set.id() == q_set_id
           caseGlobals.current_question_set.get()
     )
-    # Should probably also do this for schemas, but
-    # it's not urgent since case links are forcing
-    # reload... so current schema is re-resolved.
 
+
+    $scope.$on("schemaCreated", (e, schema_id)->
+      caseGlobals.reload_schemas()
+    )
+
+    $scope.$on("schemaModified", (e, schema_id)->
+      caseGlobals.reload_schemas()
+      if caseGlobals.current_schema
+        if caseGlobals.current_schema.id == schema_id
+          caseGlobals.set_current_schema(schema_id)
+    )
+
+    $scope.$on("schemaRemoved", (e, schema_id)->
+      caseGlobals.reload_schemas()
+      if caseGlobals.current_schema
+        if caseGlobals.current_schema.id == schema_id
+          caseGlobals.current_schema = null
+    )
 
     # when server changes, refresh gloabls
     $scope.$watch "current_user.server()", (newServer)->

@@ -2,11 +2,11 @@
 
   <!-- Schema Case Data -->
   <div class="col-sm-9">
-    <div ng-repeat="field_set in current_schema.field_sets" class="panel panel-default field_set">
+    <div ng-repeat="field_set in globals.current_schema.field_sets" class="panel panel-default field_set">
       <div class="panel-heading">
         {{field_set.name}}
-        <a href ng-show="current_user.id() == current_schema.user.id"
-           ui-sref="edit_schema.edit_field_set({schema_id:current_schema.id, field_set_id: field_set.id})"><i class="fa fa-edit"/></a>
+        <a href ng-show="current_user.id() == globals.current_schema.user.id"
+           ui-sref="edit_schema.edit_field_set({schema_id:globals.current_schema.id, field_set_id: field_set.id})"><i class="fa fa-edit"/></a>
       </div>
 
       <div class="panel-body">

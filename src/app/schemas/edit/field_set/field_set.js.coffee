@@ -29,14 +29,6 @@ angular.module("case-ui.schemas.edit.field_set", [
     fs.id == parseInt($stateParams.field_set_id)
   )
 
-  $scope.save = ()->
-    $scope.field_set.put().then(
-      (resp)->
-        console.log "resp"
-      ,(err)->
-        console.log err
-    )
-
 
 .controller "NewFieldSetCtrl", ($scope, $stateParams, $state)->
   $scope.field_set = {}
