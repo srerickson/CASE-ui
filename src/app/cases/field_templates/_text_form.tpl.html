@@ -1,1 +1,6 @@
-<textarea ng-model="field_values[0].value" class="form-control"/>
+<div ui-ace="{
+  useWrapMode : true,
+  theme:'chrome',
+  mode: 'markdown',
+  onLoad: aceLoaded
+}" ng-model="field_values[0].value" class="form-control"/>

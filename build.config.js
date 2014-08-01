@@ -67,6 +67,11 @@ module.exports = {
       'vendor/jquery-ui/ui/minified/widget.min.js',
       'vendor/jquery-ui/ui/minified/mouse.min.js',
       'vendor/jquery-ui/ui/minified/sortable.min.js',
+      'vendor/ace-builds/src-min-noconflict/ace.js',
+      'vendor/ace-builds/src-min-noconflict/mode-markdown.js',
+      'vendor/ace-builds/src-min-noconflict/theme-chrome.js',
+      'vendor/ace-builds/src-min-noconflict/ext-searchbox.js',
+      'vendor/ace-builds/src-min-noconflict/ext-spellcheck.js',
       'vendor/angular/angular.js',
       'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
@@ -84,7 +89,8 @@ module.exports = {
       'vendor/d3/d3.min.js',
       'vendor/angular-ui-select/dist/select.min.js',
       'vendor/marked/lib/marked.js',
-      'vendor/angular-marked/angular-marked.min.js'
+      'vendor/angular-marked/angular-marked.min.js',
+      'vendor/angular-ui-ace/ui-ace.min.js'
     ],
     css: [
       'vendor/angular-loading-bar/build/loading-bar.min.css',

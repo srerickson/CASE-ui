@@ -4,6 +4,7 @@ angular.module("case-ui.cases", [
   "case-ui.current-user"
   "ui.router"
   "restangular"
+  "ui.ace"
   "blueimp.fileupload"
   "hc.marked"
 ])
@@ -203,6 +204,11 @@ angular.module("case-ui.cases", [
 
     # TODO: handle multiple values?
     $scope.field_values = $scope.kase.field_values[fd.id]
+
+  $scope.aceLoaded = (editor)->
+    editor.setOption("spellcheck", true)
+
+
 
 
   ##
