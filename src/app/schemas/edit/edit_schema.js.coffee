@@ -47,8 +47,9 @@ angular.module("case-ui.schemas.edit",[
   $scope.remove = ()->
     $modal.open(
       templateUrl: "schemas/edit/destroy_confirm.tpl.html"
-      controller: ($scope, schema)->
+      controller: ["$scope", "schema", ($scope, schema)->
         $scope.schema = schema
+      ]
       resolve: {
         schema: ()-> $scope.schema
       }
