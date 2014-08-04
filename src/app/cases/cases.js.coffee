@@ -18,12 +18,42 @@ angular.module("case-ui.cases", [
 
 
 
+
+# .factory "Case", (Restangular)->
+#   # collection methods
+#   # - methods for querying cases 
+
+
+# .factory "Field", (Restangular)->
+#   Field = (schema_id)->
+#   #Restangular.service()
+
+
+# .factory "Column", 
+
+#   # Sets the type of thing the column will show.
+#   # Options are: 
+#   # - Field
+#   # - Question 
+#   Column = (id,type)->
+#     this.id = id
+#     this.type = type
+
+
+
+
+
+
+
+
+
+
 .controller "CaseListCtrl",
   ($scope, Restangular, $state, $stateParams,
   current_schema, current_question_set, evaluationService)->
 
     $scope.question_set = current_question_set # a service
-    $scope.schema = current_schema
+    $scope.schema = current_schema 
     $scope.cases = []
     $scope.evaluationService = evaluationService
 
