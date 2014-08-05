@@ -31,7 +31,7 @@
 
       <li class="divider"></li>
       <li class="dropdown-header">Select Active Question Set</li>
-      <li ng-repeat="set in globals.question_sets" ng-class="{case_active: set.id == globals.current_question_set.id()}">
+      <li ng-repeat="set in globals.question_sets" ng-class="{case_active: set.id == globals.current_question_set.id}">
 
           <a class="set" href ng-click="set_current_set(set.id)">
             <i class="fa fa-check text-primary"/>

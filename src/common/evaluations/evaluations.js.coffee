@@ -1,7 +1,6 @@
 angular.module("case-ui.evaluations", [
   "case-ui.evaluations.question-types"
   "case-ui.evaluation-set"
-  "ui.router"
   "ui.select"
   "ui.bootstrap"
   "restangular"
@@ -32,24 +31,23 @@ angular.module("case-ui.evaluations", [
 
   {
 
-    evaluation_detail: (eval_set_service,kase,question,user_only=true)->
+    evaluation_detail: (eval_set, kase, question, user_only=true)->
       $modal.open({
         controller: "EvaluationResponsePopupCtrl"
         templateUrl: "evaluations/response_detail_modal.tpl.html"
         resolve:
-          #pass the restangular model, not the whole evaluationSet object
-          evaluation_set: ()-> eval_set_service.evaluation_set
+          evaluation_set: ()-> eval_set
           kase: ()-> kase
           question: ()-> question
           user_only: ()-> user_only
       }).result
 
-    new_evaluation: (eval_set_service)->
+    new_evaluation: (eval_set)->
       $modal.open(
         controller: "NewEvaluationPopup"
         templateUrl: "evaluations/new_response_modal.tpl.html"
         resolve:
-          evaluation_set: ()-> eval_set_service.evaluation_set
+          evaluation_set: ()-> eval_set
       ).result
 
     question_type: (q)->

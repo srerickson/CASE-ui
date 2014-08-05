@@ -2,6 +2,8 @@ angular.module("case-ui", [
   "templates-app"
   "templates-common"
   "case-ui.config"    # see here for app configs
+  "case-ui.schema"
+  "case-ui.evaluation-set"
   "case-ui.globals"
   "case-ui.root"
   "case-ui.current-user"
@@ -37,8 +39,8 @@ angular.module("case-ui", [
       # reload the current question set
       # if it's the one that was modified
       if caseGlobals.current_question_set
-        if caseGlobals.current_question_set.id() == q_set_id
-          caseGlobals.current_question_set.get()
+        if caseGlobals.current_question_set.id == q_set_id
+          caseGlobals.current_question_set.refresh()
     )
 
     $scope.$on("schemaCreated", (e, schema_id)->
@@ -49,7 +51,7 @@ angular.module("case-ui", [
       caseGlobals.reload_schemas()
       if caseGlobals.current_schema
         if caseGlobals.current_schema.id == schema_id
-          caseGlobals.set_current_schema(schema_id)
+          caseGlobals.current_schema.refresh()
     )
 
     $scope.$on("schemaRemoved", (e, schema_id)->

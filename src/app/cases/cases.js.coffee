@@ -18,49 +18,19 @@ angular.module("case-ui.cases", [
 
 
 
-
-# .factory "Case", (Restangular)->
-#   # collection methods
-#   # - methods for querying cases 
-
-
-# .factory "Field", (Restangular)->
-#   Field = (schema_id)->
-#   #Restangular.service()
-
-
-# .factory "Column", 
-
-#   # Sets the type of thing the column will show.
-#   # Options are: 
-#   # - Field
-#   # - Question 
-#   Column = (id,type)->
-#     this.id = id
-#     this.type = type
-
-
-
-
-
-
-
-
-
-
 .controller "CaseListCtrl",
   ($scope, Restangular, $state, $stateParams,
   current_schema, current_question_set, evaluationService)->
 
     $scope.question_set = current_question_set # a service
-    $scope.schema = current_schema 
+    $scope.schema = current_schema
     $scope.cases = []
     $scope.evaluationService = evaluationService
 
     # default params for case list
     case_filter_params = {
       user_evaluated: true
-      set_id: current_question_set.id()
+      set_id: current_question_set.id
     }
 
     # defautl params for evaluations
@@ -79,7 +49,7 @@ angular.module("case-ui.cases", [
       delete case_filter_params.user_evaluated
 
     # fetch evaluation responses
-    current_question_set.refresh_responses(eval_filter_params)
+    current_question_set.get_responses(eval_filter_params)
 
     Restangular.all('cases').getList(case_filter_params)
       .then (resp)-> $scope.cases = resp
@@ -88,9 +58,9 @@ angular.module("case-ui.cases", [
       evaluationService.new_evaluation(current_question_set)
       .then(
         (ok)->
-          current_question_set.refresh_responses(eval_filter_params)
+          current_question_set.get_responses(eval_filter_params)
         ,(err) ->
-          current_question_set.refresh_responses(eval_filter_params)
+          current_question_set.get_responses(eval_filter_params)
       )
 
     $scope.evaluation_detail = (k,q)->
@@ -98,9 +68,9 @@ angular.module("case-ui.cases", [
       evaluationService.evaluation_detail(current_question_set,k,q,user_only)
       .then(
         (ok)->
-          current_question_set.refresh_responses_for(k,q,eval_filter_params)
+          current_question_set.get_responses_for(k,q,eval_filter_params)
         ,(err) ->
-          current_question_set.refresh_responses_for(k,q,eval_filter_params)
+          current_question_set.get_responses_for(k,q,eval_filter_params)
       )
 
     $scope.go = (id)->
