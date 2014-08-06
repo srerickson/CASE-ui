@@ -35,10 +35,15 @@
                 <!-- Value -->
                 <td class="field_value_wrapper col-sm-10">
                   <div class="inplace-edit-form match-size">
-                    <div class="field_value form {{_fd.type}}" ng-include=' template_path(["form"]) '></div>
+                    <div class="field_value form {{_fd.type}}" 
+                         field-value="field_values[0]" 
+                         for-field="field_definition"
+                         template-style="form"></div>
                   </div>
                   <div class="inplace-edit-show match-size">
-                    <div class="field_value show {{_fd.type}}" ng-include=' template_path() '></div>
+                    <div class="field_value show {{_fd.type}}" 
+                         field-value="field_values[0]" 
+                         for-field="field_definition"></div>
                   </div>
                 </td>
 

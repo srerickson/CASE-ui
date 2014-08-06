@@ -1,5 +1,5 @@
 angular.module("case-ui.cases.edit", [
-  # "case-ui.evaluations"
+  "case-ui.fields"
   "ui.router"
   "restangular"
   "blueimp.fileupload"
@@ -105,33 +105,3 @@ angular.module("case-ui.cases.edit", [
     # TODO: handle multiple values?
     $scope.field_values = $scope.kase.field_values[fd.id]
 
-
-  ##
-  # Returns path to field value's render/form html template
-  #
-  $scope.template_path = (styles = [])->
-    if $scope.field_definition
-      base_path =  "cases/edit/field_templates/"
-      type = ""
-      if $scope.field_definition.type == "SelectField"
-        type = "select"
-      else if $scope.field_definition.type == "TextField"
-        type = "text"
-
-      #FIXME - short only used on forms
-      if "form" in styles
-        if $scope.field_definition.value_options.short
-          styles.push("short")
-
-      if styles.length
-        tpl = "#{base_path}_#{type}_#{(styles).join('_')}.tpl.html"
-      else
-        tpl = "#{base_path}_#{type}.tpl.html"
-      tpl
-
-
-  $scope.select_lookup = (value)->
-    if value and $scope.field_definition
-      return _.find($scope.field_definition.value_options.select, (opt)->
-        opt.id == value.value
-      )
