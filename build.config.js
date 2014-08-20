@@ -70,6 +70,7 @@ module.exports = {
       'vendor/angular/angular.js',
       'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
+      'vendor/ng-grid/ng-grid-2.0.12.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-sortable/sortable.min.js',
       'vendor/angular-ui-utils/modules/route/route.js',
@@ -88,7 +89,8 @@ module.exports = {
     ],
     css: [
       'vendor/angular-loading-bar/build/loading-bar.min.css',
-      'vendor/angular-ui-select/dist/select.min.css'
+      'vendor/angular-ui-select/dist/select.min.css',
+      'vendor/ng-grid/ng-grid.min.css'
     ],
     assets: [
     ]

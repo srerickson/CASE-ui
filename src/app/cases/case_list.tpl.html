@@ -2,15 +2,16 @@
 
   <div class="col-sm-10">
 
+    <div ng-grid="gridOptions"></div>
     <!-- Case List -->
-    <table class="table table-hover table-bordered">
+<!--     <table class="table table-hover table-bordered">
       <thead>
         <tr>
           <td colspan='2'>Case</td>
-          <td ng-repeat="q in question_set.questions"
-              class="eval_question"
-              ng-class="{subquestion: q.is_subquestion}">
-            {{q.param}}
+          <td ng-repeat="c in columns"
+              class="{{c.route}}"
+              ng-class="{subquestion: c.is_subquestion}">
+            {{c.param}}
           </td>
         <tr>
       </thead>
@@ -26,22 +27,39 @@
             {{k.name}}
             </a>
           </td>
-          <td ng-repeat="q in question_set.questions"
-              ng-class="{subquestion: q.is_subquestion}"
-              class="pie_container"
-              ng-click="evaluation_detail(k,q)">
-            <div evaluation-responses="question_set.responses_lookup[k.id][q.id][0]"
+          <td ng-repeat="c in columns"
+              ng-class="{subquestion: c.is_subquestion}">         
+                <div evaluation-responses="question_set.responses_lookup[k.id][q.id][0]"
                  for-question="q"></div>
 
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 
 
 
   <div class="col-sm-2">
+
+    <p>
+      <h5>Columns</h5>
+      <div>name</div>
+      <div ng-repeat="col in column_defs">
+        {{col.param}}
+      </div>
+
+      <ui-select ng-model="$parent.new_column"
+                 theme="bootstrap" 
+                 ng-disabled="disabled" style="width:100%;">
+        <ui-select-match placeholder="add schema field">Add Schema Field</ui-select-match>
+        <ui-select-choices repeat="field in available_fields| filter: {param: $select.search }">
+          {{field.param}}
+        </ui-select-choices> 
+      </ui-select>
+
+
+    </p>
 
     <p>
       <h5>Filter Cases</h5>
@@ -60,7 +78,6 @@
 
     <p>
       <a class="btn btn-block btn-success" ui-sref="new_case" ><i class="fa fa-plus"> New Case</i></a>
-
       <a class="btn btn-block btn-success" ng-click="new_evaluation()"> <i class="fa fa-plus"> New Evaluation </i> </a>
     </p>
 

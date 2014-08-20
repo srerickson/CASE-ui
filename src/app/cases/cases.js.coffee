@@ -2,8 +2,11 @@ angular.module("case-ui.cases", [
   "case-ui.cases.new"
   "case-ui.cases.edit"
   "case-ui.evaluations"
+  "case-ui.fields"
   "ui.router"
   "restangular"
+  "ngGrid"
+  "ui.select"
 ])
 
 
@@ -22,56 +25,142 @@ angular.module("case-ui.cases", [
   ($scope, Restangular, $state, $stateParams,
   current_schema, current_question_set, evaluationService)->
 
-    $scope.question_set = current_question_set # a service
-    $scope.schema = current_schema
-    $scope.cases = []
-    $scope.evaluationService = evaluationService
+    $scope.column_defs = []
 
-    # default params for case list
-    case_filter_params = {
-      user_evaluated: true
-      set_id: current_question_set.id
+    $scope.available_fields = _.flatten(
+      _.map(current_schema.field_sets, (fs)-> fs.field_definitions )
+
+    )
+
+    $scope.new_column = {}
+    $scope.$watch('new_column',(n,o)->
+      if n and n != o
+        $scope.add_column_definition(n)
+    )
+
+
+    # col can be a schema field_definition or an
+    # evaluation question
+    #
+    $scope.add_column_definition = (col)->
+      col_def = {
+        displayName: col.param
+        entity: col
+      }
+
+      template = ""
+      if col.route == "field_definitions"
+        template = "<div field-value='row.entity.field_values[#{col.id}]'
+                    for-field='col.colDef.entity'></div>"
+      else if col.route == "questions"
+        template = "<div evaluation-responses='row.entity.responses[#{c.id}]'
+                    for-question='col.colDef.entity'></div>"
+
+      col_def.cellTemplate = template
+
+      $scope.column_defs.push col_def
+      
+
+
+
+    # build column defs
+    
+    $scope.column_defs.push {
+      field: "name"
+      cellTemplate: "
+        <div class=\"ngCellText\" ng-class=\"col.colIndex()\">
+          <a href ui-sref='edit_case({case_id: row.entity.id})'>
+            {{row.getProperty(col.field)}}
+          </a>
+        </div>"
     }
 
-    # defautl params for evaluations
-    eval_filter_params = {
-      own: true       # only user's evals
-      aggregate:true  # aggregate responses
+    $scope.gridOptions = {
+      data: 'cases'
+      columnDefs: 'column_defs'
+      rowHeight: "60"
     }
 
-    if $stateParams.eval_filter == 'all'
-      delete eval_filter_params.own
+    Restangular.all('cases').getList()
+    .then (resp)->
+      $scope.cases = resp
+      build_table($scope.columns)
+          
 
-    if $stateParams.case_filter == 'schema'
-      case_filter_params.schema_id = current_schema.id
-    else if $stateParams.case_filter == 'all'
-      delete case_filter_params.set_id
-      delete case_filter_params.user_evaluated
+    build_table = (cols) ->
+      fields = _.filter cols, (col)-> col.route == "field_definitions"
+      questions = _.filter cols, (col)-> col.route == "questions"
 
-    # fetch evaluation responses
-    current_question_set.get_responses(eval_filter_params)
+      field_ids = _.map fields, (f)-> f.id
+      question_ids = _.map questions, (q)-> q.id
 
-    Restangular.all('cases').getList(case_filter_params)
-      .then (resp)-> $scope.cases = resp
+      Restangular.all('field_values')
+      .getList({field_definition_ids: field_ids.join(",")})
+      .then (values)->
+        for val in values
+          idx = _.findIndex $scope.cases, (kase)-> kase.id == val.case_id
+          $scope.cases[idx].field_values ||= {}
+          $scope.cases[idx].field_values[val.field_definition_id] = val
 
-    $scope.new_evaluation = ->
-      evaluationService.new_evaluation(current_question_set)
-      .then(
-        (ok)->
-          current_question_set.get_responses(eval_filter_params)
-        ,(err) ->
-          current_question_set.get_responses(eval_filter_params)
-      )
+      if question_ids and question_ids.length
+        current_question_set.all('responses')
+        .getList({aggregate:true})
+        .then (resps)->
+          for resp in resps
+            idx = _.findIndex $scope.cases, (kase)-> kase.id == resp.case_id
+            $scope.cases[idx].responses ||= {}
+            $scope.cases[idx].responses[resp.question_id] = resp
 
-    $scope.evaluation_detail = (k,q)->
-      if eval_filter_params.own then user_only = true else user_only = false
-      evaluationService.evaluation_detail(current_question_set,k,q,user_only)
-      .then(
-        (ok)->
-          current_question_set.get_responses_for(k,q,eval_filter_params)
-        ,(err) ->
-          current_question_set.get_responses_for(k,q,eval_filter_params)
-      )
+
+    # $scope.question_set = current_question_set # a service
+    # $scope.schema = current_schema
+    # $scope.cases = []
+    # $scope.evaluationService = evaluationService
+
+    # # default params for case list
+    # case_filter_params = {
+    #   user_evaluated: true
+    #   set_id: current_question_set.id
+    # }
+
+    # # defautl params for evaluations
+    # eval_filter_params = {
+    #   own: true       # only user's evals
+    #   aggregate:true  # aggregate responses
+    # }
+
+    # if $stateParams.eval_filter == 'all'
+    #   delete eval_filter_params.own
+
+    # if $stateParams.case_filter == 'schema'
+    #   case_filter_params.schema_id = current_schema.id
+    # else if $stateParams.case_filter == 'all'
+    #   delete case_filter_params.set_id
+    #   delete case_filter_params.user_evaluated
+
+    # # fetch evaluation responses
+    # current_question_set.get_responses(eval_filter_params)
+
+
+
+    # $scope.new_evaluation = ->
+    #   evaluationService.new_evaluation(current_question_set)
+    #   .then(
+    #     (ok)->
+    #       current_question_set.get_responses(eval_filter_params)
+    #     ,(err) ->
+    #       current_question_set.get_responses(eval_filter_params)
+    #   )
+
+    # $scope.evaluation_detail = (k,q)->
+    #   if eval_filter_params.own then user_only = true else user_only = false
+    #   evaluationService.evaluation_detail(current_question_set,k,q,user_only)
+    #   .then(
+    #     (ok)->
+    #       current_question_set.get_responses_for(k,q,eval_filter_params)
+    #     ,(err) ->
+    #       current_question_set.get_responses_for(k,q,eval_filter_params)
+    #   )
 
     $scope.go = (id)->
       $state.go('edit_case',{case_id: id},{reload: true})

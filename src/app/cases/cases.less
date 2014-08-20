@@ -1,40 +1,20 @@
 
 .case_list {
 
-  thead {
-    td.eval_question.subquestion {
-      display:block;
-      width: 50px;
-      position:relative;
-      overflow: hidden;
-      border:none;
-    }
+  div[ng-grid] {
+    height: 500px;
   }
 
-  td.pie_container {
 
-    width: 80px;
-    
-    div[evaluation-responses] {
-      width: 60px;
-      height:60px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    &.subquestion {
-      width: 50px;
-      div[evaluation-pie] {
-        width: 40px;
-        height:40px;
-      }
-    }
-
+  div[evaluation-responses] {
+    width: 60px;
+    height:60px;
+    position:relative;
+    overflow:hidden;
   }
+
 
 }
-
-
 
 
 
