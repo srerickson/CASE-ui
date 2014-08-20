@@ -39,8 +39,22 @@ angular.module("case-ui.evaluation-set", [
           store_response(r) for r in resp
       )
 
-
     model
+
+  #
+  # Nested Question Set Behaviors
+  #
+  Restangular.addElementTransformer("evaluations/sets", false, (elem)->
+    if elem.questions
+      elem.questions = Restangular.restangularizeCollection(
+        elem,
+        elem.questions,
+        'questions'
+      )
+    return elem
+  )
+
+
 
   #return restangular service
   Restangular.service('evaluations/sets')

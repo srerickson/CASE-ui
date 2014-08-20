@@ -48,41 +48,12 @@ angular.module("case-ui.config", [
     extractedData
 
 
-
-
 # additional Restangular config that need $window
 .run (Restangular, $window) ->
 
   if $window.sessionStorage.case_server
     Restangular.setBaseUrl $window.sessionStorage.case_server
 
-  Restangular.addElementTransformer("schemas", false, (elem)->
-    if elem.field_sets
-      elem.field_sets = Restangular.restangularizeCollection(
-        elem,
-        elem.field_sets,
-        'field_sets'
-      )
-    return elem
-  )
-  Restangular.addElementTransformer("field_sets", false, (elem)->
-    if elem.field_definitions
-      elem.field_definitions = Restangular.restangularizeCollection(
-        elem,
-        elem.field_definitions,
-        'field_definitions'
-      )
-    return elem
-  )
-  Restangular.addElementTransformer("evaluations/sets", false, (elem)->
-    if elem.questions
-      elem.questions = Restangular.restangularizeCollection(
-        elem,
-        elem.questions,
-        'questions'
-      )
-    return elem
-  )
   Restangular.addFullRequestInterceptor (elem, op, route, url, hdrs, pa) ->
     config = {}
     config.headers = hdrs or {}
