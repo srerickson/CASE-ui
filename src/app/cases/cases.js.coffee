@@ -25,55 +25,18 @@ angular.module("case-ui.cases", [
   ($scope, Restangular, $state, $stateParams,
   current_schema, current_question_set, evaluationService)->
 
-    $scope.column_defs = []
+    $scope.cases = []
 
-    $scope.available_fields = _.flatten(
-      _.map(current_schema.field_sets, (fs)-> fs.field_definitions )
-
-    )
-
-    $scope.new_column = {}
-    $scope.$watch('new_column',(n,o)->
-      if n and n != o
-        $scope.add_column_definition(n)
-    )
-
-
-    # col can be a schema field_definition or an
-    # evaluation question
-    #
-    $scope.add_column_definition = (col)->
-      col_def = {
-        displayName: col.param
-        entity: col
-      }
-
-      template = ""
-      if col.route == "field_definitions"
-        template = "<div field-value='row.entity.field_values[#{col.id}]'
-                    for-field='col.colDef.entity'></div>"
-      else if col.route == "questions"
-        template = "<div evaluation-responses='row.entity.responses[#{c.id}]'
-                    for-question='col.colDef.entity'></div>"
-
-      col_def.cellTemplate = template
-
-      $scope.column_defs.push col_def
-      
-
-
-
-    # build column defs
-    
-    $scope.column_defs.push {
+    $scope.column_defs = [{
       field: "name"
+      displayName: "Name"
       cellTemplate: "
         <div class=\"ngCellText\" ng-class=\"col.colIndex()\">
           <a href ui-sref='edit_case({case_id: row.entity.id})'>
             {{row.getProperty(col.field)}}
           </a>
         </div>"
-    }
+    }]
 
     $scope.gridOptions = {
       data: 'cases'
@@ -81,35 +44,91 @@ angular.module("case-ui.cases", [
       rowHeight: "60"
     }
 
-    Restangular.all('cases').getList()
-    .then (resp)->
-      $scope.cases = resp
-      build_table($scope.columns)
-          
+    $scope.available_columns = _.flatten(
+      _.map(current_schema.field_sets, (fs)-> fs.field_definitions)
+    ).concat current_question_set.questions
 
-    build_table = (cols) ->
-      fields = _.filter cols, (col)-> col.route == "field_definitions"
-      questions = _.filter cols, (col)-> col.route == "questions"
 
-      field_ids = _.map fields, (f)-> f.id
-      question_ids = _.map questions, (q)-> q.id
 
-      Restangular.all('field_values')
-      .getList({field_definition_ids: field_ids.join(",")})
-      .then (values)->
-        for val in values
-          idx = _.findIndex $scope.cases, (kase)-> kase.id == val.case_id
-          $scope.cases[idx].field_values ||= {}
-          $scope.cases[idx].field_values[val.field_definition_id] = val
+    # col can be a schema field_definition or an
+    # evaluation question
+    #
+    $scope.add_column = (col)->
+      col_def = {
+        displayName: col.param
+        entity: col
+        headerCellTemplate: 'cases/_grid_header.tpl.html'
+      }
 
-      if question_ids and question_ids.length
+      # if the column is a schema field ...
+      if col.route == "field_definitions"
+        col_def.cellTemplate = "<div
+            field-value='row.entity.field_values[#{col.id}]'
+            for-field='col.colDef.entity'></div>"
+
+        # fetch the values for the column
+        col.all('field_values').getList()
+        .then (values)->
+          for val in values
+            idx = _.findIndex $scope.cases, (kase)-> kase.id == val.case_id
+            $scope.cases[idx].field_values ||= {}
+            $scope.cases[idx].field_values[val.field_definition_id] = val
+
+          $scope.column_defs.push col_def
+
+
+      # if the column is an evaluation question ...
+      else if col.route == "questions"
+        col_def.cellTemplate = "<div
+          evaluation-responses='row.entity.responses[#{col.id}]'
+          for-question='col.colDef.entity'></div>"
+
         current_question_set.all('responses')
-        .getList({aggregate:true})
+        .getList({aggregate:true, question_id: col.id})
         .then (resps)->
           for resp in resps
             idx = _.findIndex $scope.cases, (kase)-> kase.id == resp.case_id
             $scope.cases[idx].responses ||= {}
             $scope.cases[idx].responses[resp.question_id] = resp
+
+          $scope.column_defs.push col_def
+
+    $scope.column_group  = (col)->
+      if col.route == "questions"
+        return "2. Evaluation Questions"
+      else
+        return "1. Schema Fields"
+
+
+
+    Restangular.all('cases').getList({schema_id: current_schema.id})
+    .then (resp)->
+      $scope.cases = resp
+          
+
+    # build_table = (cols) ->
+    #   fields = _.filter cols, (col)-> col.route == "field_definitions"
+    #   questions = _.filter cols, (col)-> col.route == "questions"
+
+    #   field_ids = _.map fields, (f)-> f.id
+    #   question_ids = _.map questions, (q)-> q.id
+
+    #   Restangular.all('field_values')
+    #   .getList({field_definition_ids: field_ids.join(",")})
+    #   .then (values)->
+    #     for val in values
+    #       idx = _.findIndex $scope.cases, (kase)-> kase.id == val.case_id
+    #       $scope.cases[idx].field_values ||= {}
+    #       $scope.cases[idx].field_values[val.field_definition_id] = val
+
+    #   if question_ids and question_ids.length
+    #     current_question_set.all('responses')
+    #     .getList({aggregate:true})
+    #     .then (resps)->
+    #       for resp in resps
+    #         idx = _.findIndex $scope.cases, (kase)-> kase.id == resp.case_id
+    #         $scope.cases[idx].responses ||= {}
+    #         $scope.cases[idx].responses[resp.question_id] = resp
 
 
     # $scope.question_set = current_question_set # a service
@@ -162,8 +181,8 @@ angular.module("case-ui.cases", [
     #       current_question_set.get_responses_for(k,q,eval_filter_params)
     #   )
 
-    $scope.go = (id)->
-      $state.go('edit_case',{case_id: id},{reload: true})
+    # $scope.go = (id)->
+    #   $state.go('edit_case',{case_id: id},{reload: true})
 
 
 

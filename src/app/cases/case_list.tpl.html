@@ -43,25 +43,19 @@
   <div class="col-sm-2">
 
     <p>
-      <h5>Columns</h5>
-      <div>name</div>
-      <div ng-repeat="col in column_defs">
-        {{col.param}}
-      </div>
-
       <ui-select ng-model="$parent.new_column"
+                 on-select="add_column($item)"
                  theme="bootstrap" 
                  ng-disabled="disabled" style="width:100%;">
-        <ui-select-match placeholder="add schema field">Add Schema Field</ui-select-match>
-        <ui-select-choices repeat="field in available_fields| filter: {param: $select.search }">
-          {{field.param}}
+        <ui-select-match placeholder="Add Column">Add Column</ui-select-match>
+        <ui-select-choices group-by="column_group"
+            repeat="column in available_columns | filter: {param: $select.search }">
+          {{column.param}}
         </ui-select-choices> 
       </ui-select>
-
-
     </p>
 
-    <p>
+<!--     <p>
       <h5>Filter Cases</h5>
       <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({case_filter:'all'})">All Cases</a>
       <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({case_filter:'schema'})">Schema's Cases</a>
@@ -73,7 +67,7 @@
       <h5>Evaluation Filters</h5>
       <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({eval_filter:'all'})">All Evaluations</a>
       <a class="btn btn-block btn-default btn-xs" ui-sref-active="active" ui-sref="cases({eval_filter:null})">Your Evaluations</a>
-    </p>
+    </p> -->
 
 
     <p>
