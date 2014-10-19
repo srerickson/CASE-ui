@@ -17,7 +17,7 @@
     "d3": "~3.4.9",
     "angular-ui-select": "~0.6.0",
     "angular-marked": "Hypercubed/angular-marked#~0.0.12",
-    "ng-grid": "~2.0.12"
+    "angular-ui-grid": "~3.0.0-rc.12"
   },
   "dependencies": {}
 }

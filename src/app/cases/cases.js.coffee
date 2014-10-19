@@ -5,7 +5,7 @@ angular.module("case-ui.cases", [
   "case-ui.fields"
   "ui.router"
   "restangular"
-  "ngGrid"
+  "ui.grid"
   "ui.select"
 ])
 
@@ -25,28 +25,31 @@ angular.module("case-ui.cases", [
   ($scope, Restangular, $state, $stateParams,
   current_schema, current_question_set, evaluationService)->
 
-    $scope.cases = []
 
-    $scope.column_defs = [{
-      field: "name"
-      displayName: "Name"
-      cellTemplate: "
-        <div class=\"ngCellText\" ng-class=\"col.colIndex()\">
-          <a href ui-sref='edit_case({case_id: row.entity.id})'>
-            {{row.getProperty(col.field)}}
-          </a>
-        </div>"
-    }]
+    $scope.columnDefs = [
+      {
+        name: "name"
+        displayName: "Name"
+        cellTemplate: "
+          <div class=\"ngCellText\" ng-class=\"col.colIndex()\">
+            <a href ui-sref='edit_case({case_id: row.entity.id})'>
+              {{row.entity.name}}
+            </a>
+          </div>"
+      }
+    ]
+
 
     $scope.gridOptions = {
-      data: 'cases'
-      columnDefs: 'column_defs'
-      rowHeight: "60"
+      columnDefs: $scope.columnDefs
     }
 
-    $scope.available_columns = _.flatten(
-      _.map(current_schema.field_sets, (fs)-> fs.field_definitions)
-    ).concat current_question_set.questions
+
+
+
+
+    $scope.available_columns = current_schema.field_definitions
+      .concat current_question_set.questions
 
 
 
@@ -54,10 +57,11 @@ angular.module("case-ui.cases", [
     # evaluation question
     #
     $scope.add_column = (col)->
+      console.log col
       col_def = {
-        displayName: col.param
-        entity: col
-        headerCellTemplate: 'cases/_grid_header.tpl.html'
+        field: col.param
+        # entity: col
+        # headerCellTemplate: 'cases/_grid_header.tpl.html'
       }
 
       # if the column is a schema field ...
@@ -74,7 +78,7 @@ angular.module("case-ui.cases", [
             $scope.cases[idx].field_values ||= {}
             $scope.cases[idx].field_values[val.field_definition_id] = val
 
-          $scope.column_defs.push col_def
+          $scope.columnDefs.push col_def
 
 
       # if the column is an evaluation question ...
@@ -91,7 +95,7 @@ angular.module("case-ui.cases", [
             $scope.cases[idx].responses ||= {}
             $scope.cases[idx].responses[resp.question_id] = resp
 
-          $scope.column_defs.push col_def
+          $scope.columnDefs.push col_def
 
     $scope.column_group  = (col)->
       if col.route == "questions"
@@ -103,7 +107,7 @@ angular.module("case-ui.cases", [
 
     Restangular.all('cases').getList({schema_id: current_schema.id})
     .then (resp)->
-      $scope.cases = resp
+      $scope.gridOptions.data = resp
           
 
     # build_table = (cols) ->
